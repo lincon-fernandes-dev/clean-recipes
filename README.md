@@ -1,5 +1,6 @@
 ## Getting Started
-first to ensure the installation of the project run 
+
+first to ensure the installation of the project run
 
 ```bash
 npm intall
@@ -12,6 +13,7 @@ npm run dev
 ```
 
 Also recommended to run
+
 ```bash
 npm run build
 ```
