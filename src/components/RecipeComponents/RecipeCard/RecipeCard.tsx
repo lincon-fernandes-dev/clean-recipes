@@ -1,10 +1,10 @@
 import { Recipe } from '@/@core/domain/entities/Recipe';
+import Badge from '@/components/templates/base/Badge/Tag/Badge';
+import Button from '@/components/templates/base/Button/Button';
+import Card from '@/components/templates/base/Card/Card';
 import { Clock, Edit, Heart, MessageSquare, Users } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
-import Badge from '../templates/base/Badge/Tag/Badge';
-import Button from '../templates/base/Button/Button';
-import Card from '../templates/base/Card/Card';
 
 // Atualize a interface IRecipe para incluir os novos campos:
 export interface IRecipe {

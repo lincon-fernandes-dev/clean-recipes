@@ -1,7 +1,7 @@
 // src/components/RecipeFeed/RecipeFeed.tsx
 import { Recipe } from '@/@core/domain/entities/Recipe';
-import RecipeCard from '@/components/RecipeCard/RecipeCard';
 import * as React from 'react';
+import RecipeCard from '../RecipeCard/RecipeCard';
 
 export interface IRecipeFeedProps {
   recipes: Recipe[];

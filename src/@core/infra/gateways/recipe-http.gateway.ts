@@ -11,8 +11,14 @@ export class RecipeHttpGateway implements RecipeGateway {
     await this.http.post('/recipes', recipe);
   }
   async findById(id: string): Promise<Recipe | null> {
-    const response = await this.http.get<Recipe>(`/recipes/${id}`);
-    return response.data || null;
+    const response = await this.http.get<IApiResponse<IRecipe>>(
+      `/recipes/${id}`
+    );
+    if (!response.data?.data) {
+      return null;
+    }
+
+    return new Recipe(response.data.data);
   }
   async findAll(): Promise<Recipe[]> {
     const response = await this.http.get<IApiResponse<IRecipe[]>>('/recipes');

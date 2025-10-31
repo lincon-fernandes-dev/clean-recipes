@@ -66,14 +66,16 @@ const Header: React.FC = () => {
           {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </Button>
 
-        <Button
-          variant="primary"
-          icon={Plus}
-          onClick={handleCreateRecipe}
-          className="shadow-lg hover:shadow-xl transition-all duration-200"
-        >
-          Nova Receita
-        </Button>
+        <Link href="/recipes/new-recipe">
+          <Button
+            variant="primary"
+            icon={Plus}
+            onClick={handleCreateRecipe}
+            className="shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            Nova Receita
+          </Button>
+        </Link>
 
         <Button
           variant="danger"
