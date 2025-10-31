@@ -2,11 +2,10 @@
 import { LucideIcon } from 'lucide-react';
 import * as React from 'react';
 import Loading from '../Loading/Loading';
-// Certifique-se de ter o 'lucide-react' instalado
 
 export interface IButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';
   size?: 'small' | 'medium' | 'large';
   children: React.ReactNode;
   icon?: LucideIcon;
@@ -23,46 +22,62 @@ const Button: React.FC<IButtonProps> = ({
   iconPosition = 'left',
   isLoading = false,
   isDisabled = false,
+  className,
   ...rest
 }) => {
   const baseClasses =
-    'flex items-center justify-center rounded-md font-medium transition-colors';
-  let variantClasses = '';
-  let sizeClasses = '';
+    'cursor-pointer flex gap-2 items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
 
-  switch (variant) {
-    case 'primary':
-      variantClasses = 'bg-green-600 text-white hover:bg-green-700';
-      break;
-    case 'secondary':
-      variantClasses = 'bg-gray-200 text-gray-800 hover:bg-gray-300';
-      break;
-  }
+  const variantClasses = {
+    primary:
+      'bg-primary text-white hover:bg-primary-dark focus:ring-primary shadow-md hover:shadow-lg',
+    secondary:
+      'bg-secondary text-white hover:bg-opacity-90 focus:ring-secondary',
+    danger:
+      'bg-folk-red text-white hover:bg-red-700 focus:ring-red-500 shadow-md hover:shadow-lg',
+    ghost:
+      'bg-transparent text-foreground hover:bg-primary hover:text-white focus:ring-primary',
+    outline:
+      'border border-border bg-transparent text-foreground hover:bg-primary hover:text-white hover:border-primary focus:ring-primary',
+  };
 
-  switch (size) {
-    case 'small':
-      sizeClasses = 'px-3 py-1.5 text-sm';
-      break;
-    case 'medium':
-      sizeClasses = 'px-4 py-2 text-base';
-      break;
-    case 'large':
-      sizeClasses = 'px-6 py-4 text-base';
-      break;
-  }
+  const sizeClasses = {
+    small: 'px-3 py-1.5 text-sm',
+    medium: 'px-4 py-2 text-base',
+    large: 'px-6 py-3 text-lg',
+  };
+
+  const flexDirection =
+    iconPosition === 'right' && Icon ? 'flex-row-reverse' : '';
+  const stateClasses =
+    isLoading || isDisabled ? 'opacity-70 cursor-not-allowed' : '';
+
+  const finalClasses = [
+    baseClasses,
+    variantClasses[variant],
+    sizeClasses[size],
+    flexDirection,
+    stateClasses,
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <button
-      className={`${baseClasses} ${variantClasses} ${sizeClasses} ${isLoading || isDisabled ? 'opacity-70 cursor-not-allowed' : ''}`}
+      className={finalClasses}
       disabled={isDisabled || isLoading}
+      {...rest}
     >
-      {isLoading && <Loading />}{' '}
-      {!isLoading && Icon && iconPosition === 'left' && (
-        <Icon className="w-4 h-4 mr-2" />
-      )}
-      {children}
-      {!isLoading && Icon && iconPosition === 'right' && (
-        <Icon className="w-4 h-4 ml-2" />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          {Icon && (
+            <Icon className={`${size === 'small' ? 'w-3 h-3' : 'w-4 h-4'}`} />
+          )}
+          {children}
+        </>
       )}
     </button>
   );
