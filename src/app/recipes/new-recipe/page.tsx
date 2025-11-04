@@ -30,22 +30,19 @@ const NewRecipePage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Criar a entidade Recipe
       const newRecipe = Recipe.create({
         ...recipeData,
-        id: `r-${Date.now()}`,
         author: {
-          id: user.id || 'current-user',
-          name: user.name || user.email || 'Usuário',
-          email: user.email || '',
+          id: user.id,
+          name: user.name,
+          password: 'tobeimplemented',
+          email: user.email,
           avatar: user.avatar,
         },
       });
 
-      // Executar a mutation
       await createRecipeMutation.mutateAsync(newRecipe);
 
-      // Redirecionar para a home ou para a receita criada
       router.push('/');
     } catch (error) {
       console.error('Erro ao criar receita:', error);
@@ -110,6 +107,7 @@ const NewRecipePage: React.FC = () => {
             currentUser={{
               id: user.id || 'current-user',
               name: user.name || user.email || 'Usuário',
+              password: 'mockpasswortTOBEimplemented',
               email: user.email || '',
               avatar: user.avatar,
             }}

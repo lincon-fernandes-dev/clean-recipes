@@ -8,6 +8,7 @@ const MOCK_USERS: IUser[] = [
   {
     id: 'u1',
     name: 'Maria Silva',
+    password: 'Maria Silva',
     email: 'maria.silva@email.com',
     avatar: '/avatars/avatar1.jpg',
     isVerified: true,
@@ -15,6 +16,7 @@ const MOCK_USERS: IUser[] = [
   {
     id: 'u2',
     name: 'João Santos',
+    password: 'João Santos',
     email: 'joao.santos@email.com',
     avatar: '/avatars/avatar2.jpg',
     isVerified: false,
@@ -22,6 +24,7 @@ const MOCK_USERS: IUser[] = [
   {
     id: 'u3',
     name: 'Ana Costa',
+    password: 'Ana Costa',
     email: 'ana.costa@email.com',
     avatar: '/avatars/avatar3.jpg',
     isVerified: true,
@@ -29,6 +32,7 @@ const MOCK_USERS: IUser[] = [
   {
     id: 'u4',
     name: 'Carlos Oliveira',
+    password: 'Carlos Oliveira',
     email: 'carlos.oliveira@email.com',
     avatar: '/avatars/avatar4.jpg',
     isVerified: false,
@@ -38,7 +42,6 @@ const MOCK_USERS: IUser[] = [
 // Mock Recipes
 export const MOCK_RECIPES: Recipe[] = [
   Recipe.create({
-    id: 'r1',
     title: 'Bolo de Cenoura Perfeito',
     description:
       'Um bolo de cenoura fofinho e úmido, com aquela cobertura de chocolate irresistível que todo mundo ama. Perfeito para o café da tarde!',
@@ -80,7 +83,6 @@ export const MOCK_RECIPES: Recipe[] = [
   }),
 
   Recipe.create({
-    id: 'r2',
     title: 'Strogonoff Clássico de Frango',
     description:
       'O clássico strogonoff brasileiro, cremoso e saboroso, perfeito para um almoço em família ou para receber visitas. Um prato que agrada a todos!',
@@ -116,7 +118,7 @@ export const MOCK_RECIPES: Recipe[] = [
       'Finalize com salsinha picada e sirva imediatamente com arroz branco e batata palha.',
     ],
     tags: ['Prato Principal', 'Família', 'Cremoso', 'Frango', 'Almoço'],
-    author: MOCK_USERS[1],
+    author: MOCK_USERS[0],
     nutrition: {
       calories: 280,
       protein: '25g',

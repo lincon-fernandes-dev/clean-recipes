@@ -92,10 +92,7 @@ export default function LoginPage() {
           {/* Efeito de brilho no card */}
           <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary to-accent"></div>
 
-          <LoginForm
-            onSuccess={handleLoginSuccess}
-            onNavigateToRegister={handleNavigateToRegister}
-          />
+          <LoginForm onLoginSucess={redirect('/')} />
 
           {/* Rodapé decorativo */}
           <div className="mt-6 pt-6 border-t border-border/50">

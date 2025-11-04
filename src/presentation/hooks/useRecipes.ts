@@ -7,7 +7,7 @@ import { FindRecipeUseCase } from '@/@core/application/recipe/find-recipe.use-ca
 import { ListRecipesUseCase } from '@/@core/application/recipe/list-recipes.use-case';
 import { UpdateRecipeUseCase } from '@/@core/application/recipe/update-recipe.use-case';
 import { Recipe } from '@/@core/domain/entities/Recipe';
-import { container, Registry } from '@/@core/infra/gateways/container-registry';
+import { container, Registry } from '@/@core/infra/container-registry';
 
 export const useRecipes = () => {
   const queryClient = useQueryClient();

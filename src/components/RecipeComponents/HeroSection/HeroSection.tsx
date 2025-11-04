@@ -1,6 +1,5 @@
-// src/components/HeroSection/HeroSection.tsx
-import { Clock, Star, TrendingUp, Users } from 'lucide-react';
-import StatsCard from '../StatusCard/StatusCard';
+import { TrendingUp, Users } from 'lucide-react';
+import StatsCard from '../../StatusCard/StatusCard';
 
 interface HeroSectionProps {
   title: string;
@@ -28,27 +27,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </p>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-12">
           <StatsCard
-            icon={<Users className="w-5 h-5" />}
+            icon={<Users className="w-5 h-5 text-card" />}
             label="Receitas"
             value="1.2K+"
           />
           <StatsCard
-            icon={<TrendingUp className="w-5 h-5" />}
+            icon={<TrendingUp className="w-5 h-5 text-card" />}
             label="Ativas Hoje"
             value="47"
-          />
-          <StatsCard
-            icon={<Clock className="w-5 h-5" />}
-            label="Tempo Médio"
-            value="35m"
-          />
-          <StatsCard
-            icon={<Star className="w-5 h-5" />}
-            label="Avaliação"
-            value="4.8"
           />
         </div>
       </div>

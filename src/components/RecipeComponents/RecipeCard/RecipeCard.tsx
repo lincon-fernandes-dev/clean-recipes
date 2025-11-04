@@ -2,11 +2,10 @@ import { Recipe } from '@/@core/domain/entities/Recipe';
 import Badge from '@/components/templates/base/Badge/Tag/Badge';
 import Button from '@/components/templates/base/Button/Button';
 import Card from '@/components/templates/base/Card/Card';
-import { Clock, Edit, Heart, MessageSquare, Users } from 'lucide-react';
+import { Clock, Heart, MessageSquare, Users } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 
-// Atualize a interface IRecipe para incluir os novos campos:
 export interface IRecipe {
   id: string;
   title: string;
@@ -37,7 +36,6 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
   recipe,
   onVote,
   onComment,
-  onEdit,
 }) => {
   const getDifficultyVariant = (difficulty: IRecipe['difficulty']) => {
     switch (difficulty) {
@@ -51,11 +49,11 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
   };
 
   return (
-    <Link href={`/recipes/${recipe.id}`} passHref>
-      <Card isClickable className="flex flex-col overflow-hidden h-full">
-        <div className="h-48 bg-gray-200 relative">
+    <Card className="flex flex-col overflow-hidden h-full">
+      <Link href={`/recipes/${recipe.id}`} passHref>
+        <div className="h-48 bg-gray-200 relative rounded-xl overflow-hidden mb-4">
           <div
-            className="absolute inset-0 bg-cover bg-center"
+            className="absolute inset-0 bg-cover bg-center "
             style={{ backgroundImage: `url(${recipe.imageUrl})` }}
           />
 
@@ -68,51 +66,42 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
             </Badge>
           </div>
         </div>
-        <div className="p-4 flex flex-col grow">
+      </Link>
+      <div className="p-4 flex flex-col grow">
+        <Link href={`/recipes/${recipe.id}`} passHref>
           <h3 className="text-xl font-bold text-gray-900 truncate mb-1">
             {recipe.title}
           </h3>
+        </Link>
 
-          <div className="flex items-center space-x-2 mb-4">
-            <span className="text-sm text-gray-500">Dificuldade:</span>
-            <Badge variant={getDifficultyVariant(recipe.difficulty)}>
-              {recipe.difficulty}
-            </Badge>
-          </div>
-          <div className="flex justify-between items-center pt-3 border-t border-gray-100 mt-auto">
-            <Button
-              variant={recipe.hasVoted('u2') ? 'danger' : 'secondary'}
-              size="small"
-              icon={Heart}
-              onClick={() => onVote(recipe.id)}
-              aria-label={`Votar na receita ${recipe.title}`}
-            >
-              {recipe.votes} Votos
-            </Button>
-            <Button
-              variant="ghost"
-              size="small"
-              icon={MessageSquare}
-              onClick={() => onComment(recipe.id)}
-              aria-label={`Ver comentários de ${recipe.title}`}
-            >
-              {recipe.commentCount} Opiniões
-            </Button>
-            {recipe.canEdit('u1') && (
-              <Button
-                variant="secondary"
-                size="small"
-                icon={Edit}
-                onClick={() => onEdit(recipe.id)}
-                aria-label={`Propor alteração em ${recipe.title}`}
-              >
-                Alterar
-              </Button>
-            )}
-          </div>
+        <div className="flex items-center space-x-2 mb-4">
+          <span className="text-sm text-primary">Dificuldade:</span>
+          <Badge variant={getDifficultyVariant(recipe.difficulty)}>
+            {recipe.difficulty}
+          </Badge>
         </div>
-      </Card>
-    </Link>
+        <div className="flex justify-between items-center pt-3 border-t border-gray-100 mt-auto">
+          <Button
+            variant={recipe.hasVoted('u2') ? 'danger' : 'secondary'}
+            size="small"
+            icon={Heart}
+            onClick={() => onVote(recipe.id!)}
+            aria-label={`Votar na receita ${recipe.title}`}
+          >
+            {recipe.votes} Votos
+          </Button>
+          <Button
+            variant="ghost"
+            size="small"
+            icon={MessageSquare}
+            onClick={() => onComment(recipe.id!)}
+            aria-label={`Ver comentários de ${recipe.title}`}
+          >
+            {recipe.commentCount} Opiniões
+          </Button>
+        </div>
+      </div>
+    </Card>
   );
 };
 

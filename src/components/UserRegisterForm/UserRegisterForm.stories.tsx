@@ -1,18 +1,18 @@
 // src/components/LoginForm/LoginForm.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
-import LoginForm from './LoginForm';
+import UserRegisterForm from './UserRegisterForm';
 
-const meta: Meta<typeof LoginForm> = {
+const meta: Meta<typeof UserRegisterForm> = {
   title: 'Organisms/LoginForm',
-  component: LoginForm,
+  component: UserRegisterForm,
   tags: ['autodocs'],
   argTypes: {
-    onLoginSucess: { action: 'Login bem-sucedido' },
+    onRegisterSuccess: { action: 'Navegar para registro' },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof LoginForm>;
+type Story = StoryObj<typeof UserRegisterForm>;
 
 export const Default: Story = {
   args: {
@@ -25,7 +25,7 @@ export const SimulatedError: Story = {
     // Renderiza o LoginForm e simula um erro
     return (
       <div className="w-full max-w-sm mx-auto p-4 border rounded-lg">
-        <LoginForm
+        <UserRegisterForm
           {...args}
           // A simulação de erro depende da lógica interna do LoginForm
           // (e do state `error` que ele gerencia)

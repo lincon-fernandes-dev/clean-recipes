@@ -48,7 +48,10 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   const [newInstruction, setNewInstruction] = useState('');
   const [newTag, setNewTag] = useState('');
 
-  const handleInputChange = (field: keyof CreateRecipeData, value: any) => {
+  const handleInputChange = (
+    field: keyof CreateRecipeData,
+    value: string | number
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -121,7 +124,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       ingredients: formData.ingredients.filter((ing) => ing.trim()),
       instructions: formData.instructions.filter((inst) => inst.trim()),
     };
-
+    console.log(currentUser);
     onSubmit(filteredData);
   };
 
@@ -204,9 +207,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
             </label>
             <select
               value={formData.difficulty}
-              onChange={(e) =>
-                handleInputChange('difficulty', e.target.value as any)
-              }
+              onChange={(e) => handleInputChange('difficulty', e.target.value)}
               className="w-full p-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground"
               required
             >
@@ -234,17 +235,17 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                   onChange={(e) => {
                     const newIngredients = [...formData.ingredients];
                     newIngredients[index] = e.target.value;
-                    handleInputChange('ingredients', newIngredients);
+                    handleInputChange('ingredients', newIngredients[index]);
                   }}
                 />
               </div>
-              <button
+              <Button
                 type="button"
                 onClick={() => removeIngredient(index)}
                 className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -289,7 +290,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                   onChange={(e) => {
                     const newInstructions = [...formData.instructions];
                     newInstructions[index] = e.target.value;
-                    handleInputChange('instructions', newInstructions);
+                    handleInputChange('instructions', newInstructions[index]);
                   }}
                   rows={2}
                   className="w-full p-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-none"

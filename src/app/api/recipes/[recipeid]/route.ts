@@ -1,47 +1,64 @@
-// src/app/api/recipes/route.ts
+// src/app/api/recipes/[id]/route.ts
 import { IApiResponse } from '@/Domain/Interfaces/IApiResponse';
 import { IComment } from '@/Domain/Interfaces/IComment';
-import { INutritionInfo } from '@/Domain/Interfaces/INutritionInfo';
 import { IRecipe } from '@/Domain/Interfaces/IRecipe';
-import { IUser } from '@/Domain/Interfaces/IUser';
-
 import Database from 'better-sqlite3';
 import { NextRequest, NextResponse } from 'next/server';
 
 const db = new Database('recipes.db');
 
-export async function GET(request: NextRequest) {
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 500));
+interface RouteParams {
+  params: Promise<{
+    recipeid: string;
+  }>;
+}
 
-    if (request.nextUrl.searchParams.get('error') === 'true') {
-      throw new Error('Simulated error');
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  try {
+    const { recipeid } = await params;
+
+    if (!recipeid) {
+      const errorResponse: IApiResponse<null> = {
+        data: null,
+        error: 'Bad Request',
+        message: 'ID da receita é obrigatório',
+      };
+      return NextResponse.json(errorResponse, { status: 400 });
     }
 
-    // Query principal para buscar receitas com todas as relações
-    const recipes = await getCompleteRecipes();
+    // Buscar receita completa
+    const recipe = await getRecipeById(recipeid);
 
-    const successResponse: IApiResponse<IRecipe[]> = {
-      data: recipes,
-      message: 'Receitas carregadas com sucesso',
+    if (!recipe) {
+      const errorResponse: IApiResponse<null> = {
+        data: null,
+        error: 'Not Found',
+        message: 'Receita não encontrada',
+      };
+      return NextResponse.json(errorResponse, { status: 404 });
+    }
+
+    const successResponse: IApiResponse<IRecipe> = {
+      data: recipe,
+      message: 'Receita carregada com sucesso',
     };
 
     return NextResponse.json(successResponse);
   } catch (error) {
-    console.error('Error fetching recipes:', error);
+    console.error('Error fetching recipe:', error);
 
-    const errorResponse: IApiResponse<[]> = {
-      data: [],
+    const errorResponse: IApiResponse<null> = {
+      data: null,
       error: 'Internal Server Error',
-      message: 'Erro ao carregar receitas',
+      message: 'Erro ao carregar receita',
     };
 
     return NextResponse.json(errorResponse, { status: 500 });
   }
 }
 
-async function getCompleteRecipes(): Promise<IRecipe[]> {
-  // Buscar todas as receitas básicas
+async function getRecipeById(id: string): Promise<IRecipe | null> {
+  // Buscar receita básica
   const recipeStmt = db.prepare(`
     SELECT 
       r.*,
@@ -53,27 +70,26 @@ async function getCompleteRecipes(): Promise<IRecipe[]> {
     FROM recipe r
     JOIN user u ON r.author_id = u.id
     LEFT JOIN recipeLike rl ON r.id = rl.recipe_id
+    WHERE r.id = ?
     GROUP BY r.id
-    ORDER BY r.created_at DESC
   `);
   // eslint-disable-next-line
-  const recipeRows = recipeStmt.all() as any[];
+  const recipeRow = recipeStmt.get(id) as any;
 
-  const recipes: IRecipe[] = [];
-
-  for (const row of recipeRows) {
-    const recipe = await buildCompleteRecipe(row);
-    recipes.push(recipe);
+  if (!recipeRow) {
+    return null;
   }
 
-  return recipes;
+  return await buildCompleteRecipe(recipeRow);
 }
+
+// Reutilizar as mesmas funções do route anterior
 // eslint-disable-next-line
 async function buildCompleteRecipe(recipeRow: any): Promise<IRecipe> {
   const recipeId = recipeRow.id;
 
   // Buscar autor
-  const author: IUser = {
+  const author = {
     id: recipeRow.author_id,
     name: recipeRow.author_name,
     password: '',
@@ -123,7 +139,7 @@ async function buildCompleteRecipe(recipeRow: any): Promise<IRecipe> {
   );
   // eslint-disable-next-line
   const nutritionRow = nutritionStmt.get(recipeId) as any;
-  const nutrition: INutritionInfo | undefined = nutritionRow
+  const nutrition = nutritionRow
     ? {
         calories: nutritionRow.calories,
         protein: nutritionRow.protein,
@@ -135,7 +151,7 @@ async function buildCompleteRecipe(recipeRow: any): Promise<IRecipe> {
   // Buscar comentários
   const comments = await getRecipeComments(recipeId);
 
-  // Calcular rating (simulado baseado nos votes)
+  // Calcular rating
   const rating = calculateRating(recipeRow.votes);
 
   // Construir objeto votedBy
@@ -158,7 +174,7 @@ async function buildCompleteRecipe(recipeRow: any): Promise<IRecipe> {
     author,
     nutrition,
     votes: recipeRow.votes || 0,
-    votedBy: votedBy,
+    votedBy,
     comments: comments.length > 0 ? comments : undefined,
     rating,
     createdAt: new Date(recipeRow.created_at),
@@ -168,7 +184,7 @@ async function buildCompleteRecipe(recipeRow: any): Promise<IRecipe> {
   return recipe;
 }
 
-async function getRecipeComments(recipeId: string): Promise<IComment[]> {
+async function getRecipeComments(recipeId: string) {
   // Buscar comentários principais (sem parent)
   const commentsStmt = db.prepare(`
     SELECT 
@@ -184,9 +200,9 @@ async function getRecipeComments(recipeId: string): Promise<IComment[]> {
     GROUP BY c.id
     ORDER BY c.created_at
   `);
-
-  const commentRows = commentsStmt.all(recipeId) as IComment[];
-  const comments: IComment[] = [];
+  // eslint-disable-next-line
+  const commentRows = commentsStmt.all(recipeId) as any[];
+  const comments = [];
 
   for (const row of commentRows) {
     const comment = await buildCompleteComment(row);
@@ -196,14 +212,14 @@ async function getRecipeComments(recipeId: string): Promise<IComment[]> {
   return comments;
 }
 // eslint-disable-next-line
-async function buildCompleteComment(commentRow: any): Promise<IComment> {
+async function buildCompleteComment(commentRow: any) {
   const commentId = commentRow.id;
 
   // Buscar autor do comentário
-  const author: IUser = {
+  const author = {
     id: commentRow.author_id,
     name: commentRow.author_name,
-    password: 'tobeimplemented',
+    password: '',
     email: commentRow.author_email,
     avatar: commentRow.author_avatar,
     isVerified: Boolean(commentRow.author_is_verified),
@@ -226,7 +242,7 @@ async function buildCompleteComment(commentRow: any): Promise<IComment> {
   `);
   // eslint-disable-next-line
   const replyRows = repliesStmt.all(commentId) as any[];
-  const replies: IComment[] = [];
+  const replies = [];
 
   for (const row of replyRows) {
     const reply = await buildCompleteComment(row);
@@ -256,9 +272,8 @@ async function buildCompleteComment(commentRow: any): Promise<IComment> {
 }
 
 function calculateRating(votes: number): number {
-  // Simular um rating baseado nos votes
   if (votes === 0) return 0;
 
-  const baseRating = 4.0 + Math.min(votes, 50) / 50; // Entre 4.0 e 5.0
-  return Math.round(baseRating * 10) / 10; // Uma casa decimal
+  const baseRating = 4.0 + Math.min(votes, 50) / 50;
+  return Math.round(baseRating * 10) / 10;
 }

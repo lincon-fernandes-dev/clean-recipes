@@ -6,7 +6,7 @@ import { DifficultyType } from '@/Domain/types/DifficultyType';
 import { Comment } from './Comment';
 
 export class Recipe implements IRecipe {
-  private _id: string;
+  private _id?: string;
   private _title: string;
   private _description: string;
   private _imageUrl: string;
@@ -51,10 +51,6 @@ export class Recipe implements IRecipe {
   }
 
   private validate(props: IRecipe): void {
-    if (!props.id.trim()) {
-      throw new Error('Recipe ID is required');
-    }
-
     if (!props.title.trim()) {
       throw new Error('Recipe title is required');
     }
@@ -89,7 +85,7 @@ export class Recipe implements IRecipe {
   }
 
   // Getters
-  get id(): string {
+  get id(): string | undefined {
     return this._id;
   }
 
@@ -222,6 +218,7 @@ export class Recipe implements IRecipe {
   }
 
   hasVoted(userId: string): boolean {
+    console.log(userId);
     return true;
   }
 
@@ -282,7 +279,7 @@ export class Recipe implements IRecipe {
   static create(
     props: Omit<
       IRecipe,
-      'votes' | 'votedBy' | 'comments' | 'createdAt' | 'updatedAt'
+      'id' | 'votes' | 'votedBy' | 'comments' | 'createdAt' | 'updatedAt'
     >
   ): Recipe {
     return new Recipe({

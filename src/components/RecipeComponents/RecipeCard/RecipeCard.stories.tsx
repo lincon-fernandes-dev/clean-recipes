@@ -34,7 +34,6 @@ const mockRecipeBase: IRecipe = {
 export const MediumDifficulty: Story = {
   args: {
     recipe: Recipe.create({
-      id: 'r1',
       title: 'Bolo de Cenoura Perfeito',
       description:
         'Um bolo de cenoura fofinho e úmido, com aquela cobertura de chocolate irresistível que todo mundo ama. Perfeito para o café da tarde!',
@@ -69,6 +68,7 @@ export const MediumDifficulty: Story = {
       author: {
         id: 'u1',
         name: 'Maria Silva',
+        password: 'Maria Silva',
         email: 'maria.silva@email.com',
         avatar: '/avatars/avatar1.jpg',
         isVerified: true,
@@ -86,7 +86,6 @@ export const MediumDifficulty: Story = {
 export const EasyAndVoted: Story = {
   args: {
     recipe: Recipe.create({
-      id: 'r1',
       title: 'Bolo de Cenoura Perfeito',
       description:
         'Um bolo de cenoura fofinho e úmido, com aquela cobertura de chocolate irresistível que todo mundo ama. Perfeito para o café da tarde!',
@@ -121,6 +120,7 @@ export const EasyAndVoted: Story = {
       author: {
         id: 'u1',
         name: 'Maria Silva',
+        password: 'Maria Silva',
         email: 'maria.silva@email.com',
         avatar: '/avatars/avatar1.jpg',
         isVerified: true,
@@ -138,7 +138,6 @@ export const EasyAndVoted: Story = {
 export const HardAndEditable: Story = {
   args: {
     recipe: Recipe.create({
-      id: 'r1',
       title: 'Bolo de Cenoura Perfeito',
       description:
         'Um bolo de cenoura fofinho e úmido, com aquela cobertura de chocolate irresistível que todo mundo ama. Perfeito para o café da tarde!',
@@ -173,6 +172,7 @@ export const HardAndEditable: Story = {
       author: {
         id: 'u1',
         name: 'Maria Silva',
+        password: 'Maria Silva',
         email: 'maria.silva@email.com',
         avatar: '/avatars/avatar1.jpg',
         isVerified: true,

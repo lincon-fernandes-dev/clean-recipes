@@ -3,7 +3,7 @@
 import { IUser } from '@/Domain/Interfaces/IUser';
 
 export class User {
-  private _id: string;
+  private _id?: string;
   private _name: string;
   private _email: string;
   private _avatar?: string;
@@ -24,10 +24,6 @@ export class User {
   }
 
   private validate(props: IUser): void {
-    if (!props.id.trim()) {
-      throw new Error('User ID is required');
-    }
-
     if (!props.name.trim()) {
       throw new Error('User name is required');
     }
@@ -43,7 +39,7 @@ export class User {
   }
 
   // Getters
-  get id(): string {
+  get id(): string | undefined {
     return this._id;
   }
 

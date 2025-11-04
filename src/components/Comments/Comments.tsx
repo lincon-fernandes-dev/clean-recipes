@@ -26,9 +26,9 @@ const Comments: React.FC<CommentsProps> = ({
 }) => {
   const [newComment, setNewComment] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const [expandedReplies, setExpandedReplies] = useState<Set<string>>(
-    new Set()
-  );
+  // const [expandedReplies, setExpandedReplies] = useState<Set<string>>(
+  //   new Set()
+  // );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,15 +39,15 @@ const Comments: React.FC<CommentsProps> = ({
     }
   };
 
-  const toggleReplies = (commentId: string) => {
-    const newExpanded = new Set(expandedReplies);
-    if (newExpanded.has(commentId)) {
-      newExpanded.delete(commentId);
-    } else {
-      newExpanded.add(commentId);
-    }
-    setExpandedReplies(newExpanded);
-  };
+  // const toggleReplies = (commentId: string) => {
+  //   const newExpanded = new Set(expandedReplies);
+  //   if (newExpanded.has(commentId)) {
+  //     newExpanded.delete(commentId);
+  //   } else {
+  //     newExpanded.add(commentId);
+  //   }
+  //   setExpandedReplies(newExpanded);
+  // };
 
   const formatTimeAgo = (timestamp: Date) => {
     const now = new Date();
@@ -66,7 +66,7 @@ const Comments: React.FC<CommentsProps> = ({
     depth = 0,
   }) => {
     const isTopLevel = depth === 0;
-    const showReplies = expandedReplies.has(comment.id);
+    // const showReplies = expandedReplies.has(comment.id);
 
     return (
       <div

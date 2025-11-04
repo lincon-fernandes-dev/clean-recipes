@@ -4,7 +4,7 @@ import { INutritionInfo } from './INutritionInfo';
 import { IUser } from './IUser';
 
 export interface IRecipe {
-  id: string;
+  id?: string;
   title: string;
   description: string;
   imageUrl: string;

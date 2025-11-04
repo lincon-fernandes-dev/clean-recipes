@@ -1,6 +1,6 @@
 // src/presentation/hooks/useRecipeFilters.ts
 import { Recipe } from '@/@core/domain/entities/Recipe';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface UseRecipeFiltersProps {
   recipes: Recipe[] | undefined;
@@ -9,15 +9,13 @@ interface UseRecipeFiltersProps {
 export const useRecipeFilters = ({ recipes }: UseRecipeFiltersProps) => {
   const [search, setSearch] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
-  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
 
-  useEffect(() => {
+  const filteredRecipes = useMemo(() => {
     if (!recipes || recipes.length === 0) {
-      setFilteredRecipes([]);
-      return;
+      return [];
     }
 
-    const filtered = recipes.filter((recipe) => {
+    return recipes.filter((recipe) => {
       const matchesSearch =
         recipe.title.toLowerCase().includes(search.toLowerCase()) ||
         recipe.tags?.some((tag) =>
@@ -37,8 +35,6 @@ export const useRecipeFilters = ({ recipes }: UseRecipeFiltersProps) => {
           return matchesSearch;
       }
     });
-
-    setFilteredRecipes(filtered);
   }, [recipes, search, selectedFilter]);
 
   return {

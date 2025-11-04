@@ -1,8 +1,7 @@
 'use client';
 
-import AuthGuard from '@/components/AuthGuard/AuthGuard';
-import FilterSection from '@/components/Filter/Filter';
-import { HeroSection } from '@/components/HeroSection/HeroSection';
+import FilterSection from '@/components/RecipeComponents/Filter/Filter';
+import { HeroSection } from '@/components/RecipeComponents/HeroSection/HeroSection';
 import RecipeFeed from '@/components/RecipeComponents/RecipeFeed/RecipeFeed';
 import { RecipeResultsHeader } from '@/components/RecipeComponents/RecipeResultsHeader/RecipeResultsHeader';
 import { RecipesEmptyState } from '@/components/RecipeComponents/RecipesEmptyState/RecipesEmptyState';
@@ -80,10 +79,4 @@ const HomePageContent: React.FC = () => {
   );
 };
 
-export default function Home() {
-  return (
-    <AuthGuard>
-      <HomePageContent />
-    </AuthGuard>
-  );
-}
+export default HomePageContent;
