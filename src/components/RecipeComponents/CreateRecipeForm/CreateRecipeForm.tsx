@@ -6,6 +6,7 @@ import Input from '@/components/templates/form/Input/Input';
 import { IIngredient } from '@/Domain/Interfaces/IIngredient';
 import { IInstruction } from '@/Domain/Interfaces/IInstruction';
 import { IUser } from '@/Domain/Interfaces/IUser';
+import { uploadImage } from '@/lib/cloudinaryService';
 import { Clock, Plus, Trash2, TrendingUp, Users } from 'lucide-react';
 import { useState } from 'react';
 
@@ -28,14 +29,12 @@ export interface CreateRecipeData {
   tags: string[];
 }
 
-// Helper functions to convert between string and object formats
 const createIngredientFromString = (
   text: string,
   index: number
 ): IIngredient => ({
   id: index + 1,
   name: text.trim(),
-  // Add other properties if your IIngredient interface requires them
 });
 
 const createInstructionFromString = (
@@ -56,7 +55,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   const [formData, setFormData] = useState<CreateRecipeData>({
     title: '',
     description: '',
-    imageUrl: '/recipes/bolo-cenoura.jpg',
+    imageUrl: '',
     preparationTime: 30,
     servings: 4,
     difficulty: 'Fácil',
@@ -65,6 +64,8 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
     tags: [],
   });
 
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [newIngredient, setNewIngredient] = useState('');
   const [newInstruction, setNewInstruction] = useState('');
   const [newTag, setNewTag] = useState('');
@@ -161,17 +162,36 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       tags: prev.tags.filter((t) => t !== tag),
     }));
   };
+  const handleImageSelect = (file: File | null) => {
+    setSelectedImageFile(file);
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const uploadImageToCloudinary = async (): Promise<string> => {
+    if (!selectedImageFile) {
+      throw new Error('Nenhuma imagem selecionada');
+    }
+
+    setIsUploading(true);
+    try {
+      console.log('🔄 Iniciando upload da imagem...');
+      const imageUrl = await uploadImage(selectedImageFile);
+      return imageUrl;
+    } catch (error) {
+      console.error('❌ Erro no upload:', error);
+      throw error;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validar campos obrigatórios
     if (!formData.title.trim() || !formData.description.trim()) {
       alert('Título e descrição são obrigatórios');
       return;
     }
 
-    // Validar que há pelo menos um ingrediente e uma instrução
     const validIngredients = formData.ingredients.filter((ing) =>
       ing.name.trim()
     );
@@ -189,7 +209,13 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       return;
     }
 
-    // Atualizar step numbers das instruções
+    if (!selectedImageFile) {
+      alert('Por favor, selecione uma imagem para a receita');
+      return;
+    }
+
+    const imageUrl = await uploadImageToCloudinary();
+    console.log('image url' + imageUrl);
     const instructionsWithStepNumbers = validInstructions.map(
       (instruction, index) => ({
         ...instruction,
@@ -197,7 +223,6 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       })
     );
 
-    // Atualizar IDs dos ingredientes
     const ingredientsWithUpdatedIds = validIngredients.map(
       (ingredient, index) => ({
         ...ingredient,
@@ -205,15 +230,15 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       })
     );
 
-    const filteredData = {
+    const finalData = {
       ...formData,
+      imageUrl: imageUrl,
       ingredients: ingredientsWithUpdatedIds,
       instructions: instructionsWithStepNumbers,
     };
 
-    console.log('Enviando receita:', filteredData);
-    console.log('Autor:', currentUser);
-    onSubmit(filteredData);
+    console.log('✅ Enviando receita com imagem:', finalData);
+    onSubmit(finalData);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent, callback: () => void) => {
@@ -222,6 +247,8 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       callback();
     }
   };
+
+  const totalIsLoading = isLoading || isUploading;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -242,8 +269,11 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
             required
           />
 
-          <ImagePicker label="Your image" name="image" />
-
+          <ImagePicker
+            label="Imagem da Receita *"
+            name="image"
+            onImageSelect={handleImageSelect}
+          />
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               Descrição *
@@ -485,18 +515,18 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           type="button"
           variant="outline"
           onClick={onCancel}
-          disabled={isLoading}
+          disabled={totalIsLoading}
         >
           Cancelar
         </Button>
         <Button
           type="submit"
           variant="primary"
-          isLoading={isLoading}
-          disabled={isLoading}
+          isLoading={totalIsLoading}
+          disabled={totalIsLoading}
           className="min-w-32"
         >
-          {isLoading ? 'Criando...' : 'Criar Receita'}
+          {totalIsLoading ? 'Criando...' : 'Criar Receita'}
         </Button>
       </div>
     </form>

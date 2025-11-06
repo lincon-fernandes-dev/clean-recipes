@@ -3,76 +3,100 @@
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 
-import classes from './image-picker.module.css';
+interface ImagePickerProps {
+  label: string;
+  name: string;
+  onImageSelect: (file: File | null) => void;
+  selectedImage?: string | null;
+}
 
 export default function ImagePicker({
   label,
   name,
-}: {
-  label: string;
-  name: string;
-}) {
-  const [pickedImage, setPickedImage] = useState<string | null>(null);
+  onImageSelect,
+  selectedImage,
+}: ImagePickerProps) {
+  const [pickedImage, setPickedImage] = useState<string | null>(
+    selectedImage || null
+  );
   const imageInput = useRef<HTMLInputElement>(null);
 
   function handlePickClick() {
-    if (imageInput.current) {
-      imageInput.current.click();
-    }
+    imageInput.current?.click();
   }
 
   function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const files = event.target.files;
-    const file = files && files[0];
+    const file = event.target.files?.[0];
 
     if (!file) {
       setPickedImage(null);
+      onImageSelect(null);
       return;
     }
 
+    // Criar preview
     const fileReader = new FileReader();
-
     fileReader.onload = () => {
       if (typeof fileReader.result === 'string') {
         setPickedImage(fileReader.result);
-      } else {
-        setPickedImage(null);
       }
     };
-
     fileReader.readAsDataURL(file);
+
+    // Notificar o formulário sobre o arquivo selecionado
+    onImageSelect(file);
   }
 
   return (
-    <div className={classes.picker}>
-      <label htmlFor={name}>{label}</label>
-      <div className={classes.controls}>
-        <div className={classes.preview}>
-          {!pickedImage && <p>No image picked yet.</p>}
-          {pickedImage && (
+    <div className="space-y-4">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-foreground"
+      >
+        {label}
+      </label>
+
+      <div className="flex items-start gap-6">
+        {/* Preview da Imagem */}
+        <div className="w-32 h-32 border-2 border-dashed border-border rounded-lg overflow-hidden bg-gray-50 relative">
+          {pickedImage ? (
             <Image
               src={pickedImage}
-              alt="The image selected by the user."
+              alt="Preview da imagem selecionada"
               fill
+              className="object-cover"
             />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
+              Sem imagem
+            </div>
           )}
         </div>
-        <input
-          className={classes.input}
-          type="file"
-          id={name}
-          accept="image/png, image/jpeg"
-          name={name}
-          ref={imageInput}
-          onChange={handleImageChange}
-        />
-        <button
-          className={classes.button}
-          type="button"
-          onClick={handlePickClick}
-        >
-          Pick an Image
-        </button>
+
+        {/* Controles */}
+        <div className="space-y-3">
+          <input
+            type="file"
+            id={name}
+            accept="image/png, image/jpeg, image/webp"
+            name={name}
+            ref={imageInput}
+            onChange={handleImageChange}
+            className="hidden"
+          />
+
+          <button
+            type="button"
+            onClick={handlePickClick}
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+          >
+            Escolher Imagem
+          </button>
+
+          <p className="text-sm text-muted-foreground">
+            PNG, JPG, WebP até 10MB
+          </p>
+        </div>
       </div>
     </div>
   );

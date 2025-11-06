@@ -35,7 +35,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
         <div className="h-48 bg-gray-200 relative rounded-xl overflow-hidden mb-4">
           <div
             className="absolute inset-0 bg-cover bg-center "
-            style={{ backgroundImage: `url(/recipes/${recipe.imageUrl})` }}
+            style={{ backgroundImage: `url(${recipe.imageUrl})` }}
           />
 
           <div className="absolute top-3 left-3 flex space-x-2">

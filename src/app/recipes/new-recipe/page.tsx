@@ -31,7 +31,6 @@ const NewRecipePage: React.FC = () => {
     try {
       const newRecipe: CreateRecipeDTO = {
         ...recipeData,
-        imageUrl: '',
         authorId: user.id!,
         nutritionInfo: {
           calories: 11,

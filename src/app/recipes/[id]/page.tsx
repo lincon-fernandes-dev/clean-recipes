@@ -103,11 +103,7 @@ const RecipeDetailPage: React.FC = () => {
           <div className="relative">
             <div className="aspect-square rounded-2xl overflow-hidden bg-muted/20">
               <div className="relative w-full h-full flex items-center justify-center text-muted-foreground">
-                <Image
-                  src={`/recipes/${recipe!.imageUrl}`}
-                  fill
-                  alt={recipe!.title}
-                />
+                <Image src={`${recipe!.imageUrl}`} fill alt={recipe!.title} />
               </div>
             </div>
 
