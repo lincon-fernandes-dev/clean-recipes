@@ -103,7 +103,11 @@ const RecipeDetailPage: React.FC = () => {
           <div className="relative">
             <div className="aspect-square rounded-2xl overflow-hidden bg-muted/20">
               <div className="relative w-full h-full flex items-center justify-center text-muted-foreground">
-                <Image src={recipe!.imageUrl} fill alt={recipe!.title} />
+                <Image
+                  src={`/recipes/${recipe!.imageUrl}`}
+                  fill
+                  alt={recipe!.title}
+                />
               </div>
             </div>
 
@@ -203,7 +207,7 @@ const RecipeDetailPage: React.FC = () => {
                   <div>
                     <span className="text-muted-foreground">Proteínas</span>
                     <p className="font-medium text-foreground">
-                      {recipe!.nutrition.protein}
+                      {recipe!.nutrition.proteins}
                     </p>
                   </div>
                   <div>
@@ -237,7 +241,7 @@ const RecipeDetailPage: React.FC = () => {
                   <li key={index} className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0"></div>
                     <span className="text-foreground leading-relaxed">
-                      {ingredient}
+                      {ingredient.name}
                     </span>
                   </li>
                 ))}
@@ -258,7 +262,7 @@ const RecipeDetailPage: React.FC = () => {
                       {index + 1}
                     </div>
                     <p className="text-foreground leading-relaxed pt-1">
-                      {instruction}
+                      {instruction.content}
                     </p>
                   </li>
                 ))}

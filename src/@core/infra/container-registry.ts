@@ -8,14 +8,14 @@ import { LoginUseCase } from '../application/login/login.use-case';
 import { FindUserByEmailUseCase } from '../application/user/find-user-byEmail.use-case';
 import { RegisterUserUseCase } from '../application/user/register-user.use-case';
 import { RecipeHttpGateway } from './gateways/recipe-http.gateway';
-import { UserLocalGateway } from './gateways/user-local.gateway';
+import { UserHttpGateway } from './gateways/user-http.gateway';
 import { http } from './http';
 
 export const Registry = {
   AxiosAdapter: Symbol.for('AxiosAdapter'),
 
   RecipeHttpGateway: Symbol.for('RecipeHttpGateway'),
-  UserLocalGateway: Symbol.for('UserLocalGateway'),
+  UserHttpGateway: Symbol.for('UserHttpGateway'),
 
   ListRecipesUseCase: Symbol.for('ListRecipesUseCase'),
   FindRecipeUseCase: Symbol.for('FindRecipeUseCase'),
@@ -36,8 +36,8 @@ container.bind(Registry.RecipeHttpGateway).toDynamicValue((context) => {
   return new RecipeHttpGateway(context.get(Registry.AxiosAdapter));
 });
 // eslint-disable-next-line
-container.bind(Registry.UserLocalGateway).toDynamicValue((context) => {
-  return new UserLocalGateway();
+container.bind(Registry.UserHttpGateway).toDynamicValue((context) => {
+  return new UserHttpGateway(context.get(Registry.AxiosAdapter));
 });
 
 container.bind(Registry.ListRecipesUseCase).toDynamicValue((context) => {
@@ -57,11 +57,11 @@ container.bind(Registry.UpdateRecipeUseCase).toDynamicValue((context) => {
 });
 
 container.bind(Registry.FindUserByEmailUseCase).toDynamicValue((context) => {
-  return new FindUserByEmailUseCase(context.get(Registry.UserLocalGateway));
+  return new FindUserByEmailUseCase(context.get(Registry.UserHttpGateway));
 });
 container.bind(Registry.LoginUseCase).toDynamicValue((context) => {
-  return new LoginUseCase(context.get(Registry.UserLocalGateway));
+  return new LoginUseCase(context.get(Registry.UserHttpGateway));
 });
 container.bind(Registry.RegisterUserUseCase).toDynamicValue((context) => {
-  return new RegisterUserUseCase(context.get(Registry.UserLocalGateway));
+  return new RegisterUserUseCase(context.get(Registry.UserHttpGateway));
 });

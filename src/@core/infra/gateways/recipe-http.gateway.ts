@@ -1,33 +1,30 @@
 import { Recipe } from '@/@core/domain/entities/Recipe';
 import { RecipeGateway } from '@/@core/domain/gateways/recipe.gateway';
-import { IApiResponse } from '@/Domain/Interfaces/IApiResponse';
 import { IRecipe } from '@/Domain/Interfaces/IRecipe';
 import { AxiosInstance } from 'axios';
 
 export class RecipeHttpGateway implements RecipeGateway {
   constructor(private http: AxiosInstance) {}
 
-  async create(recipe: Recipe): Promise<void> {
+  async create(recipe: IRecipe): Promise<void> {
     await this.http.post('/recipes', recipe);
   }
   async findById(id: string): Promise<Recipe | null> {
-    const response = await this.http.get<IApiResponse<IRecipe>>(
-      `/recipes/${id}`
-    );
-    if (!response.data?.data) {
+    const response = await this.http.get<IRecipe>(`/recipes/${id}`);
+    if (!response.data) {
       return null;
     }
 
-    return new Recipe(response.data.data);
+    return new Recipe(response.data);
   }
   async findAll(): Promise<Recipe[]> {
-    const response = await this.http.get<IApiResponse<IRecipe[]>>('/recipes');
+    const response = await this.http.get<IRecipe[]>('/recipes');
 
-    if (!response.data?.data) {
+    if (!response.data) {
       return [];
     }
 
-    return response.data.data.map((recipeData) => new Recipe(recipeData));
+    return response.data.map((recipeData) => new Recipe(recipeData));
   }
   async update(recipe: Recipe): Promise<void> {
     await this.http.put(`/recipes/${recipe.id}`, recipe);

@@ -1,9 +1,9 @@
-import { UserLocalGateway } from '@/@core/infra/gateways/user-local.gateway';
+import { UserHttpGateway } from '@/@core/infra/gateways/user-http.gateway';
 import { ILoginResult } from '@/Domain/Interfaces/ILoginResult';
 import { IUser } from '@/Domain/Interfaces/IUser';
 
 export class RegisterUserUseCase {
-  constructor(private userLocalGateway: UserLocalGateway) {}
+  constructor(private userLocalGateway: UserHttpGateway) {}
   async execute(user: IUser): Promise<ILoginResult> {
     return this.userLocalGateway.createUser(user);
   }

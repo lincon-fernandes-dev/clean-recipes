@@ -8,6 +8,7 @@ import { ListRecipesUseCase } from '@/@core/application/recipe/list-recipes.use-
 import { UpdateRecipeUseCase } from '@/@core/application/recipe/update-recipe.use-case';
 import { Recipe } from '@/@core/domain/entities/Recipe';
 import { container, Registry } from '@/@core/infra/container-registry';
+import { CreateRecipeDTO } from '@/Domain/DTOs/CreateRecipeDTO';
 
 export const useRecipes = () => {
   const queryClient = useQueryClient();
@@ -49,7 +50,8 @@ export const useRecipes = () => {
   // Mutation para criar uma receita
   const useCreateRecipe = () => {
     return useMutation({
-      mutationFn: (recipe: Recipe) => createRecipeUseCase.execute(recipe),
+      mutationFn: (recipe: CreateRecipeDTO) =>
+        createRecipeUseCase.execute(recipe),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['recipes'] });
       },

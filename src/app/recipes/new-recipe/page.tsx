@@ -1,13 +1,12 @@
-// src/app/recipes/new/page.tsx
 'use client';
 
-import { Recipe } from '@/@core/domain/entities/Recipe';
 import AuthGuard from '@/components/AuthGuard/AuthGuard';
 import {
   CreateRecipeData,
   RecipeForm,
 } from '@/components/RecipeComponents/CreateRecipeForm/CreateRecipeForm';
 import { useAuth } from '@/context/AuthContext';
+import { CreateRecipeDTO } from '@/Domain/DTOs/CreateRecipeDTO';
 import { useRecipes } from '@/presentation/hooks/useRecipes';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -30,16 +29,17 @@ const NewRecipePage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const newRecipe = Recipe.create({
+      const newRecipe: CreateRecipeDTO = {
         ...recipeData,
-        author: {
-          id: user.id,
-          name: user.name,
-          password: 'tobeimplemented',
-          email: user.email,
-          avatar: user.avatar,
+        imageUrl: '',
+        authorId: user.id!,
+        nutritionInfo: {
+          calories: 11,
+          proteins: 11,
+          carbs: 11,
+          fat: 11,
         },
-      });
+      };
 
       await createRecipeMutation.mutateAsync(newRecipe);
 
@@ -105,9 +105,9 @@ const NewRecipePage: React.FC = () => {
             onCancel={handleCancel}
             isLoading={isSubmitting || createRecipeMutation.isPending}
             currentUser={{
-              id: user.id || 'current-user',
+              id: user.id,
               name: user.name || user.email || 'Usuário',
-              password: 'mockpasswortTOBEimplemented',
+              passwordHash: 'mockpasswortTOBEimplemented',
               email: user.email || '',
               avatar: user.avatar,
             }}

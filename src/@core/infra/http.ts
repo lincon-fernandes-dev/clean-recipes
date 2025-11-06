@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7256/',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -12,13 +12,10 @@ export const http = axios.create({
 // Interceptor para logging
 http.interceptors.request.use(
   (config) => {
-    console.log(
-      `🔄 API Request: ${config.method?.toUpperCase()} ${config.url}`
-    );
     return config;
   },
   (error) => {
-    console.error('❌ API Request Error:', error);
+    console.error('API Request Error:', error);
     return Promise.reject(error);
   }
 );
@@ -26,11 +23,10 @@ http.interceptors.request.use(
 // Interceptor para tratamento de respostas
 http.interceptors.response.use(
   (response) => {
-    console.log(`✅ API Response: ${response.status} ${response.config.url}`);
     return response;
   },
   (error) => {
-    console.error('❌ API Response Error:', {
+    console.error('API Response Error:', {
       url: error.config?.url,
       method: error.config?.method,
       status: error.response?.status,

@@ -2,6 +2,7 @@
 import { useAuth } from '@/context/AuthContext';
 import { Moon, Plus, Sun } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LoginDialog from '../LoginDialog/LoginDialog';
 import Button from '../templates/base/Button/Button';
@@ -38,13 +39,25 @@ const Header: React.FC = () => {
   };
 
   const handleCreateRecipe = () => {
-    console.log('Abrir modal/página de criação de nova receita.');
+    if (user) {
+      console.log('teste tem user');
+      redirect('/recipes/new-recipe');
+    } else {
+      console.log('teste nao tem user');
+      openLoginForm();
+    }
   };
 
   const openLoginForm = () => {
     setIsLoginDialogOpen(true);
   };
-
+  const handleAuthChange = () => {
+    if (user) {
+      handleLogout();
+    } else {
+      openLoginForm();
+    }
+  };
   const handleLogout = () => {
     logout();
   };
@@ -82,22 +95,20 @@ const Header: React.FC = () => {
             )}
           </Button>
 
-          <Link href="/recipes/new-recipe">
-            <Button
-              variant="primary"
-              size="small"
-              icon={Plus}
-              onClick={handleCreateRecipe}
-              className="shadow-lg hover:shadow-xl transition-all duration-200"
-            >
-              Nova Receita
-            </Button>
-          </Link>
+          <Button
+            variant="primary"
+            size="small"
+            icon={Plus}
+            onClick={handleCreateRecipe}
+            className="shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            Nova Receita
+          </Button>
 
           <Button
             variant="danger"
             size="small"
-            onClick={user ? handleLogout : openLoginForm}
+            onClick={handleAuthChange}
             className="hover:scale-105 transition-transform duration-200"
           >
             {user ? 'Sair' : 'Entrar'}

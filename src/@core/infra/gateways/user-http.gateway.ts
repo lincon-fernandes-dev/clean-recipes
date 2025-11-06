@@ -1,26 +1,27 @@
 import { UserGateway } from '@/@core/domain/gateways/user.gateway';
 import { ILoginResult } from '@/Domain/Interfaces/ILoginResult';
 import { IUser } from '@/Domain/Interfaces/IUser';
+import { AxiosInstance } from 'axios';
 
-export class UserLocalGateway implements UserGateway {
-  constructor() {}
+export class UserHttpGateway implements UserGateway {
+  constructor(private http: AxiosInstance) {}
   async createUser(user: IUser): Promise<ILoginResult> {
     try {
-      const response = await fetch('/api/users', {
+      const response = await this.http.post<IUser>('/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
       });
-      if (!response.ok) {
+      if (response.status != 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       } else {
-        const result = await response.json();
+        const result = await response.data;
         return {
           success: true,
           message: 'Usuário criado com sucesso',
-          user: result.data as IUser,
+          user: result as IUser,
         };
       }
     } catch (error) {
@@ -34,22 +35,15 @@ export class UserLocalGateway implements UserGateway {
   }
   async getUserByEmail(email: string): Promise<IUser | null> {
     try {
-      const response = await fetch(`/api/users/${encodeURIComponent(email)}`);
+      const response = await this.http.get<IUser>(
+        `/users/${encodeURIComponent(email)}`
+      );
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          return null;
-        }
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response) {
+        throw new Error(`HTTP error! status`);
       }
 
-      const result = await response.json();
-
-      if (result.data) {
-        return result.data as IUser;
-      }
-
-      return null;
+      return response.data as IUser;
     } catch (error) {
       console.error('Error fetching user by email:', error);
       return null;

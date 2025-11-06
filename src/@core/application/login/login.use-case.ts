@@ -1,9 +1,9 @@
 // src/@core/application/auth/login.use-case.ts
-import { UserLocalGateway } from '@/@core/infra/gateways/user-local.gateway';
+import { UserHttpGateway } from '@/@core/infra/gateways/user-http.gateway';
 import { ILoginResult } from '@/Domain/Interfaces/ILoginResult';
 
 export class LoginUseCase {
-  constructor(private userGateway: UserLocalGateway) {}
+  constructor(private userGateway: UserHttpGateway) {}
 
   async execute(email: string, password: string): Promise<ILoginResult> {
     try {

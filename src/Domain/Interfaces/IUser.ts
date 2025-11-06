@@ -1,8 +1,8 @@
 export interface IUser {
-  id?: string;
+  id?: number;
   name: string;
   email: string;
-  password: string;
+  passwordHash: string;
   avatar?: string;
   isVerified?: boolean;
   createdAt?: Date;

@@ -102,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const result = await LoginUseCase.execute({
           name: name,
           email: email,
-          password: password,
+          passwordHash: password,
         });
 
         if (result.user) {

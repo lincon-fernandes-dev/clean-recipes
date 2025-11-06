@@ -1,4 +1,6 @@
 // src/Domain/Entities/Recipe.ts
+import { IIngredient } from '@/Domain/Interfaces/IIngredient';
+import { IInstruction } from '@/Domain/Interfaces/IInstruction';
 import { INutritionInfo } from '@/Domain/Interfaces/INutritionInfo';
 import { IRecipe } from '@/Domain/Interfaces/IRecipe';
 import { IUser } from '@/Domain/Interfaces/IUser';
@@ -13,8 +15,8 @@ export class Recipe implements IRecipe {
   private _preparationTime: number;
   private _servings: number;
   private _difficulty: DifficultyType;
-  private _ingredients: string[];
-  private _instructions: string[];
+  private _ingredients: IIngredient[];
+  private _instructions: IInstruction[];
   private _tags?: string[];
   private _author: IUser;
   private _nutrition?: INutritionInfo;
@@ -113,11 +115,11 @@ export class Recipe implements IRecipe {
     return this._difficulty;
   }
 
-  get ingredients(): string[] {
+  get ingredients(): IIngredient[] {
     return [...this._ingredients];
   }
 
-  get instructions(): string[] {
+  get instructions(): IInstruction[] {
     return [...this._instructions];
   }
 

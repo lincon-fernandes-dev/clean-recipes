@@ -1,4 +1,4 @@
-export interface INutritionInfo {
+export interface CreateNutritionInfoDTO {
   calories: number;
   proteins: number;
   carbs: number;
