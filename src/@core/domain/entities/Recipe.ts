@@ -20,8 +20,8 @@ export class Recipe implements IRecipe {
   private _tags?: string[];
   private _author: IUser;
   private _nutrition?: INutritionInfo;
-  private _votes: number;
-  private _votedBy: Set<string>;
+  private _votes?: number;
+  private _votedBy?: Set<string>;
   private _comments: Comment[];
   private _createdAt?: Date;
   private _updatedAt?: Date;
@@ -80,10 +80,6 @@ export class Recipe implements IRecipe {
     if (props.instructions.length === 0) {
       throw new Error('Recipe must have at least one instruction');
     }
-
-    if (props.votes < 0) {
-      throw new Error('Votes cannot be negative');
-    }
   }
 
   // Getters
@@ -135,7 +131,7 @@ export class Recipe implements IRecipe {
     return this._nutrition;
   }
 
-  get votes(): number {
+  get votes(): number | undefined {
     return this._votes;
   }
 
@@ -199,59 +195,9 @@ export class Recipe implements IRecipe {
     this._updatedAt = new Date();
   }
 
-  vote(userId: string): void {
-    if (this._votedBy.has(userId)) {
-      throw new Error('User already voted for this recipe');
-    }
-
-    this._votedBy.add(userId);
-    this._votes += 1;
-    this._updatedAt = new Date();
-  }
-
-  unvote(userId: string): void {
-    if (!this._votedBy.has(userId)) {
-      throw new Error('User has not voted for this recipe');
-    }
-
-    this._votedBy.delete(userId);
-    this._votes = Math.max(0, this._votes - 1);
-    this._updatedAt = new Date();
-  }
-
   hasVoted(userId: string): boolean {
     console.log(userId);
     return true;
-  }
-
-  canEdit(userId: string): boolean {
-    return this.author.id === userId;
-  }
-
-  canDelete(userId: string): boolean {
-    return this.author.id === userId;
-  }
-
-  addComment(comment: Comment): void {
-    if (comment.recipeId !== this.id) {
-      throw new Error('Comment does not belong to this recipe');
-    }
-
-    this._comments.push(comment);
-    this._updatedAt = new Date();
-  }
-
-  removeComment(commentId: string, userId: string): void {
-    const commentIndex = this._comments.findIndex(
-      (comment) => comment.id === commentId && comment.canDelete(userId)
-    );
-
-    if (commentIndex === -1) {
-      throw new Error('Comment not found or user cannot delete this comment');
-    }
-
-    this._comments.splice(commentIndex, 1);
-    this._updatedAt = new Date();
   }
 
   addTag(tag: string): void {

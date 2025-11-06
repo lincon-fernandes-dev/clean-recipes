@@ -1,4 +1,3 @@
-// src/components/RecipeForm/RecipeForm.tsx
 'use client';
 
 import ImagePicker from '@/components/ImagePicker/imagePicker';

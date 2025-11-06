@@ -1,12 +1,13 @@
 import { Recipe } from '@/@core/domain/entities/Recipe';
 import { RecipeGateway } from '@/@core/domain/gateways/recipe.gateway';
+import { CreateRecipeDTO } from '@/Domain/DTOs/CreateRecipeDTO';
 import { IRecipe } from '@/Domain/Interfaces/IRecipe';
 import { AxiosInstance } from 'axios';
 
 export class RecipeHttpGateway implements RecipeGateway {
   constructor(private http: AxiosInstance) {}
 
-  async create(recipe: IRecipe): Promise<void> {
+  async create(recipe: CreateRecipeDTO): Promise<void> {
     await this.http.post('/recipes', recipe);
   }
   async findById(id: string): Promise<Recipe | null> {

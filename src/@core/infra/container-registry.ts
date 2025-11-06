@@ -35,7 +35,7 @@ container.bind(Registry.AxiosAdapter).toConstantValue(http);
 container.bind(Registry.RecipeHttpGateway).toDynamicValue((context) => {
   return new RecipeHttpGateway(context.get(Registry.AxiosAdapter));
 });
-// eslint-disable-next-line
+
 container.bind(Registry.UserHttpGateway).toDynamicValue((context) => {
   return new UserHttpGateway(context.get(Registry.AxiosAdapter));
 });

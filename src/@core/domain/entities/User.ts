@@ -3,7 +3,7 @@
 import { IUser } from '@/Domain/Interfaces/IUser';
 
 export class User {
-  private _id?: string;
+  private _id?: number;
   private _name: string;
   private _email: string;
   private _avatar?: string;
@@ -39,7 +39,7 @@ export class User {
   }
 
   // Getters
-  get id(): string | undefined {
+  get id(): number | undefined {
     return this._id;
   }
 

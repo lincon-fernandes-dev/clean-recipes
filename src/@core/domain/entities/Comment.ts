@@ -123,11 +123,11 @@ export class Comment implements IComment {
     return this._likedBy.has(userId);
   }
 
-  canEdit(userId: string): boolean {
+  canEdit(userId: number): boolean {
     return this._author.id === userId;
   }
 
-  canDelete(userId: string): boolean {
+  canDelete(userId: number): boolean {
     return this._author.id === userId;
   }
 

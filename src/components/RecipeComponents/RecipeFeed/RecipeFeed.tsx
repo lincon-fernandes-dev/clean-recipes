@@ -1,10 +1,9 @@
-// src/components/RecipeFeed/RecipeFeed.tsx
-import { Recipe } from '@/@core/domain/entities/Recipe';
+import { IRecipe } from '@/Domain/Interfaces/IRecipe';
 import * as React from 'react';
 import RecipeCard from '../RecipeCard/RecipeCard';
 
 export interface IRecipeFeedProps {
-  recipes: Recipe[];
+  recipes: IRecipe[];
   onRecipeAction: (type: 'vote' | 'comment' | 'edit', recipeId: string) => void;
   // Adicione props para filtros, ordenação, etc.
 }

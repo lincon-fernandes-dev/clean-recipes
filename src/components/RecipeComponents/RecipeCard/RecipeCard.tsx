@@ -1,32 +1,13 @@
-import { Recipe } from '@/@core/domain/entities/Recipe';
 import Badge from '@/components/templates/base/Badge/Tag/Badge';
 import Button from '@/components/templates/base/Button/Button';
 import Card from '@/components/templates/base/Card/Card';
+import { IRecipe } from '@/Domain/Interfaces/IRecipe';
 import { Clock, Heart, MessageSquare, Users } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 
-export interface IRecipe {
-  id: string;
-  title: string;
-  imageUrl: string;
-  time: string;
-  servings: number;
-  difficulty: 'Fácil' | 'Médio' | 'Difícil';
-  votes: number;
-  commentCount: number;
-  hasVoted: boolean;
-  canEdit: boolean;
-  user?: {
-    name: string;
-    avatar: string;
-  };
-  tags?: string[];
-  rating?: number;
-}
-
 export interface IRecipeCardProps {
-  recipe: Recipe;
+  recipe: IRecipe;
   onVote: (recipeId: string) => void;
   onComment: (recipeId: string) => void;
   onEdit: (recipeId: string) => void;
@@ -82,7 +63,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
         </div>
         <div className="flex justify-between items-center pt-3 border-t border-gray-100 mt-auto">
           <Button
-            variant={recipe.hasVoted('u2') ? 'danger' : 'secondary'}
+            variant="secondary"
             size="small"
             icon={Heart}
             onClick={() => onVote(recipe.id!)}
@@ -97,7 +78,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
             onClick={() => onComment(recipe.id!)}
             aria-label={`Ver comentários de ${recipe.title}`}
           >
-            {recipe.commentCount} Opiniões
+            {recipe.comments?.length} Opiniões
           </Button>
         </div>
       </div>

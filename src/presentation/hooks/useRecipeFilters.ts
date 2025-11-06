@@ -1,9 +1,9 @@
 // src/presentation/hooks/useRecipeFilters.ts
-import { Recipe } from '@/@core/domain/entities/Recipe';
+import { IRecipe } from '@/Domain/Interfaces/IRecipe';
 import { useMemo, useState } from 'react';
 
 interface UseRecipeFiltersProps {
-  recipes: Recipe[] | undefined;
+  recipes: IRecipe[] | undefined;
 }
 
 export const useRecipeFilters = ({ recipes }: UseRecipeFiltersProps) => {
@@ -23,8 +23,6 @@ export const useRecipeFilters = ({ recipes }: UseRecipeFiltersProps) => {
         );
 
       switch (selectedFilter) {
-        case 'popular':
-          return recipe.votes > 100;
         case 'easy':
           return recipe.difficulty === 'Fácil';
         case 'dessert':

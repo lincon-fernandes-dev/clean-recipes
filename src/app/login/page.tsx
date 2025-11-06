@@ -1,4 +1,3 @@
-// src/app/login/page.tsx
 'use client';
 
 import LoginForm from '@/components/LoginForm/LoginForm';
@@ -9,7 +8,7 @@ import { redirect, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,15 +27,6 @@ export default function LoginPage() {
       router.replace('/');
     }
   }, [isAuthenticated, isLoading, router]);
-
-  const handleLoginSuccess = () => {
-    // Simulação de login bem-sucedido
-    login('teste', 'mock-token-123');
-  };
-
-  const handleNavigateToRegister = () => {
-    router.push('/register');
-  };
 
   if (isAuthenticated && !isLoading) {
     redirect('/');
