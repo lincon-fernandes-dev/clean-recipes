@@ -103,13 +103,6 @@ const NewRecipePage: React.FC = () => {
             onSubmit={handleSubmit}
             onCancel={handleCancel}
             isLoading={isSubmitting || createRecipeMutation.isPending}
-            currentUser={{
-              id: user.id,
-              name: user.name || user.email || 'Usuário',
-              passwordHash: 'mockpasswortTOBEimplemented',
-              email: user.email || '',
-              avatar: user.avatar,
-            }}
           />
         </div>
       </main>

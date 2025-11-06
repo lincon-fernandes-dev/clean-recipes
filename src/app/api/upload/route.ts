@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
       url: result.secure_url,
       publicId: result.public_id,
     });
+    // eslint-disable-next-line
   } catch (error: any) {
     console.error('❌ Erro no upload Cloudinary:', error);
 

@@ -5,7 +5,6 @@ import Button from '@/components/templates/base/Button/Button';
 import Input from '@/components/templates/form/Input/Input';
 import { IIngredient } from '@/Domain/Interfaces/IIngredient';
 import { IInstruction } from '@/Domain/Interfaces/IInstruction';
-import { IUser } from '@/Domain/Interfaces/IUser';
 import { uploadImage } from '@/lib/cloudinaryService';
 import { Clock, Plus, Trash2, TrendingUp, Users } from 'lucide-react';
 import { useState } from 'react';
@@ -14,7 +13,6 @@ interface RecipeFormProps {
   onSubmit: (recipeData: CreateRecipeData) => void;
   onCancel: () => void;
   isLoading?: boolean;
-  currentUser: IUser;
 }
 
 export interface CreateRecipeData {
@@ -50,7 +48,6 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   onSubmit,
   onCancel,
   isLoading = false,
-  currentUser,
 }) => {
   const [formData, setFormData] = useState<CreateRecipeData>({
     title: '',
