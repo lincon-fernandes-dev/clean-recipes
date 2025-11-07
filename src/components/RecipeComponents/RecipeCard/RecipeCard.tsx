@@ -50,20 +50,20 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
       </Link>
       <div className="p-4 flex flex-col grow">
         <Link href={`/recipes/${recipe.id}`} passHref>
-          <h3 className="text-xl font-bold text-gray-900 truncate mb-1">
+          <h3 className="text-xl font-bold text-accent truncate mb-1">
             {recipe.title}
           </h3>
         </Link>
 
         <div className="flex items-center space-x-2 mb-4">
-          <span className="text-sm text-primary">Dificuldade:</span>
+          <span className="text-md text-primary">Dificuldade:</span>
           <Badge variant={getDifficultyVariant(recipe.difficulty)}>
             {recipe.difficulty}
           </Badge>
         </div>
         <div className="flex justify-between items-center pt-3 border-t border-gray-100 mt-auto">
           <Button
-            variant="secondary"
+            variant="primary"
             size="small"
             icon={Heart}
             onClick={() => onVote(recipe.id!)}
@@ -72,7 +72,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
             {recipe.votes} Votos
           </Button>
           <Button
-            variant="ghost"
+            variant="secondary"
             size="small"
             icon={MessageSquare}
             onClick={() => onComment(recipe.id!)}

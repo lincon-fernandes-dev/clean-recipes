@@ -43,7 +43,7 @@ const HomePageContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <HeroSection
-        title="Descobre & Compartilha"
+        title="Descubra & Compartilhe"
         highlightText="Receitas Incríveis"
         subtitle="Junte-se à nossa comunidade de amantes da culinária. Explore milhares de receitas, compartilhe suas criações e inspire-se todos os dias."
       />

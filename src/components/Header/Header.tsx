@@ -40,10 +40,8 @@ const Header: React.FC = () => {
 
   const handleCreateRecipe = () => {
     if (user) {
-      console.log('teste tem user');
       redirect('/recipes/new-recipe');
     } else {
-      console.log('teste nao tem user');
       openLoginForm();
     }
   };
@@ -67,7 +65,7 @@ const Header: React.FC = () => {
       <header className="sticky top-0 bg-card border-b border-border shadow-sm backdrop-blur-sm bg-opacity-95 p-4 flex justify-between items-center z-50 transition-colors duration-300">
         <div className="flex items-center space-x-2">
           <Link href="/">
-            <h1 className="text-2xl font-bold bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
+            <h1 className="text-lg md:text-2xl font-bold bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
               RecipeApp
             </h1>
           </Link>
@@ -75,9 +73,9 @@ const Header: React.FC = () => {
 
         <div className="flex items-center space-x-3">
           {user && (
-            <span className="text-sm text-muted-foreground hidden sm:inline dark:text-secondary">
+            <span className="text-sm text-primary hidden sm:inline">
               Bem-vindo(a),{' '}
-              <span className="font-medium text-foreground">{user?.name}</span>
+              <span className="font-medium text-accent">{user?.name}</span>
             </span>
           )}
 
@@ -85,7 +83,7 @@ const Header: React.FC = () => {
             variant="ghost"
             size="small"
             onClick={toggleTheme}
-            className="rounded-full p-2 hover:bg-primary hover:text-white transition-all duration-200 outline-0 dark:text-secondary"
+            className="rounded-full p-2 hover:bg-primary hover:text-white transition-all duration-200 outline-0 text-secondary"
             aria-label={isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
           >
             {isDark ? (

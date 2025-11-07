@@ -1,10 +1,9 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #fefdf8;
+  --background: #f7f5ed;
   --foreground: #2c2a26;
   --primary: #d4a574;
-  --primary-dark: #b08a5e;
   --secondary: #8b7355;
   --accent: #e67e22;
   --muted: #a8a29e;
@@ -17,7 +16,6 @@
   --background: #1a1612;
   --foreground: #f5f3f0;
   --primary: #e0b989;
-  --primary-dark: #e0b989;
   --secondary: #9c8a6f;
   --accent: #f39c12;
   --muted: #6b7280;
@@ -31,7 +29,6 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
-  --color-primary-dark: var(--primary-dark);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-muted: var(--muted);
@@ -40,7 +37,6 @@
   --color-card-foreground: var(--card-foreground);
 
   /* Cores específicas do tema folk */
-  --color-folk-dark: var(--foreground);
   --color-folk-bg: var(--background);
   --color-folk-brown: var(--secondary);
   --color-folk-sand: var(--primary);
@@ -62,13 +58,11 @@ body {
     color 0.3s ease;
 }
 
-/* Suporte ao sistema de preferência de cor */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     --background: #463422;
-    --foreground: #4d3614;
+    --foreground: #f5f3f0;
     --primary: #d4a574;
-    --primary-dark: #e0b989;
     --secondary: #9c8a6f;
     --accent: #f39c12;
     --muted: #6b7280;

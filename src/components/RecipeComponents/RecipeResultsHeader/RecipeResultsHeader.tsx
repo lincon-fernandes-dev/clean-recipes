@@ -25,12 +25,10 @@ export const RecipeResultsHeader: React.FC<RecipeResultsHeaderProps> = ({
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
       <div>
-        <h2 className="text-3xl font-bold text-foreground">
+        <h2 className="text-3xl font-bold text-accent">
           {getHeaderTitle(selectedFilter)}
         </h2>
-        <p className="text-muted-foreground mt-2">
-          {resultCount} receitas encontradas
-        </p>
+        <p className="text-primary mt-2">{resultCount} receitas encontradas</p>
       </div>
 
       {searchQuery && (

@@ -198,8 +198,8 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
 
       {/* Mensagem de Erro */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-          <p className="text-red-700 dark:text-red-300 text-sm flex items-center">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+          <p className="text-red-700 text-sm flex items-center">
             <span className="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></span>
             {error}
           </p>

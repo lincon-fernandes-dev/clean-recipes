@@ -50,8 +50,8 @@ const Input: React.FC<IInputProps> = ({
           id={inputId}
           className={`
             w-full p-3 border rounded-xl focus:outline-none transition-all duration-200
-            bg-background dark:bg-secondary text-foreground placeholder-muted-foreground
-            disabled:opacity-50 disabled:cursor-not-allowed dark:text-card-foreground
+            bg-background text-foreground placeholder-muted-foreground
+            disabled:opacity-50 disabled:cursor-not-allowed 
             ${Icon ? 'pl-11' : 'pl-4'}
             ${endAdornment ? 'pr-11' : 'pr-4'}
             ${

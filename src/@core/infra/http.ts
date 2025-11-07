@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export const http = axios.create({
-  baseURL: 'https://clean-recipes.runasp.net/',
+  baseURL: 'https://localhost:7256/',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

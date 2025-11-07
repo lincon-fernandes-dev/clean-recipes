@@ -377,7 +377,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                 <Button
                   type="button"
                   onClick={() => removeIngredient(index)}
-                  className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                  className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -432,7 +432,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                 <button
                   type="button"
                   onClick={() => removeInstruction(index)}
-                  className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950 rounded-lg transition-colors opacity-0 group-hover:opacity-100 mt-1"
+                  className="p-2 text-red-500 hover:bg-red-50  rounded-lg transition-colors opacity-0 group-hover:opacity-100 mt-1"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

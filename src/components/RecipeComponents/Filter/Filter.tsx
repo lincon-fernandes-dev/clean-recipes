@@ -20,13 +20,13 @@ const FilterSection: React.FC<{
     <div className="bg-card rounded-2xl p-6 shadow-sm border border-border mb-8">
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
         <div className="relative flex-1 w-full">
-          <Search className="absolute z-10 left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" />
+          <Search className="absolute text-primary z-10 left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" />
           <Input
             type="text"
             placeholder="Buscar receitas, ingredientes..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            className=" pl-10 pr-4 py-3 border border-border rounded-xl bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+            className=" pl-10 pr-4 py-3 border border-border rounded-xl bg-background text-foreground placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
           />
         </div>
         <div className="flex flex-wrap gap-2">

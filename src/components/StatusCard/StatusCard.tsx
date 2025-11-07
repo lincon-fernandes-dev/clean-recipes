@@ -8,8 +8,8 @@ const StatsCard: React.FC<{
       {icon}
     </div>
     <div>
-      <p className="text-2xl font-bold text-foreground">{value}</p>
-      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="text-2xl font-bold text-primary">{value}</p>
+      <p className="text-sm text-secondary">{label}</p>
     </div>
   </div>
 );

@@ -36,7 +36,7 @@ const Card: React.FC<ICardProps> = ({
 
   return (
     <div
-      className={`bg-secondary rounded-lg ${shadowClasses} ${paddingClasses} ${clickableClasses} ${className}`}
+      className={`bg-card rounded-lg ${shadowClasses} ${paddingClasses} ${clickableClasses} ${className}`}
       {...rest}
     >
       {children}

@@ -38,7 +38,7 @@ const Button: React.FC<IButtonProps> = ({
     ghost:
       'bg-transparent text-foreground hover:bg-primary hover:text-white focus:ring-primary',
     outline:
-      'border border-border bg-transparent text-foreground hover:bg-primary hover:text-white hover:border-primary focus:ring-primary',
+      'border border-border bg-transparent text-primary hover:bg-primary hover:text-white hover:border-primary focus:ring-primary',
   };
 
   const sizeClasses = {
