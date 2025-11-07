@@ -2,14 +2,13 @@
 import axios from 'axios';
 
 export const http = axios.create({
-  baseURL: 'https://localhost:7256/',
+  baseURL: process.env.NEXT_APP_APIURL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Interceptor para logging
 http.interceptors.request.use(
   (config) => {
     return config;

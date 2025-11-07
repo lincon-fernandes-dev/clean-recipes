@@ -133,7 +133,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
         {isLoading ? 'Entrando...' : 'Entrar na Cozinha'}
       </Button>
 
-      <div className="relative flex items-center py-4">
+      {/* <div className="relative flex items-center py-4">
         <div className="grow border-t border-border/50"></div>
         <span className="shrink mx-4 text-muted-foreground text-sm">ou</span>
         <div className="grow border-t border-border/50"></div>
@@ -144,7 +144,11 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
           type="button"
           variant="outline"
           size="medium"
-          onClick={() => console.log('Login com Google')}
+          onClick={() =>
+            alert(
+              'authenticação com google a ser implementada, utilize admin@admin com qualquer senha para logar'
+            )
+          }
           disabled={true}
           className="w-full border-border hover:bg-card transition-colors duration-200"
         >
@@ -173,7 +177,11 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
           type="button"
           variant="outline"
           size="medium"
-          onClick={() => console.log('Login com Facebook')}
+          onClick={() =>
+            alert(
+              'authenticação com facebook a ser implementada, utilize admin@admin com qualquer senha para logar'
+            )
+          }
           disabled={true}
           className="w-full border-border hover:bg-card transition-colors duration-200"
         >
@@ -182,7 +190,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
           </svg>
           Facebook
         </Button>
-      </div>
+      </div> */}
     </form>
   );
 };

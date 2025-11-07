@@ -159,6 +159,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       tags: prev.tags.filter((t) => t !== tag),
     }));
   };
+
   const handleImageSelect = (file: File | null) => {
     setSelectedImageFile(file);
   };
@@ -248,14 +249,14 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   const totalIsLoading = isLoading || isUploading;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
       {/* Informações Básicas */}
-      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-        <h2 className="text-2xl font-bold text-foreground mb-6">
+      <div className="bg-card border border-border rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4 md:mb-6">
           Informações Básicas
         </h2>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           <Input
             label="Título da Receita *"
             placeholder="Ex: Bolo de Chocolate Caseiro"
@@ -271,6 +272,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
             name="image"
             onImageSelect={handleImageSelect}
           />
+
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               Descrição *
@@ -279,19 +281,20 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
               placeholder="Descreva sua receita... O que a torna especial?"
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
-              rows={4}
-              className="w-full p-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-none transition-colors"
+              rows={3}
+              className="w-full p-3 border border-border rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-vertical min-h-[100px] md:min-h-[120px] text-sm md:text-base leading-relaxed"
               required
               minLength={25}
               maxLength={524}
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             <div>
               <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                Tempo de Preparo (minutos) *
+                <span className="hidden sm:inline">Tempo de Preparo</span>
+                <span className="sm:hidden">Tempo (min)</span>
               </label>
               <Input
                 type="number"
@@ -311,7 +314,8 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
             <div>
               <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
                 <Users className="w-4 h-4" />
-                Porções *
+                <span className="hidden sm:inline">Porções *</span>
+                <span className="sm:hidden">Porções</span>
               </label>
               <Input
                 type="number"
@@ -325,8 +329,8 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
               />
             </div>
 
-            <div>
-              <label className=" text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+            <div className="sm:col-span-2 lg:col-span-1">
+              <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
                 <TrendingUp className="w-4 h-4" />
                 Dificuldade *
               </label>
@@ -335,7 +339,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                 onChange={(e) =>
                   handleInputChange('difficulty', e.target.value)
                 }
-                className="w-full p-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground transition-colors"
+                className="w-full p-3 border border-border rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground transition-colors text-sm md:text-base"
                 required
               >
                 <option value="Fácil">Fácil</option>
@@ -348,18 +352,21 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
       </div>
 
       {/* Ingredientes */}
-      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-        <h2 className="text-2xl font-bold text-foreground mb-6">
+      <div className="bg-card border border-border rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4 md:mb-6">
           Ingredientes *
         </h2>
 
         <div className="space-y-3">
           {formData.ingredients.map((ingredient, index) => (
-            <div key={ingredient.id} className="flex items-center gap-3 group">
-              <div className="w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center shrink-0 font-medium text-sm">
+            <div
+              key={ingredient.id}
+              className="flex items-center gap-2 md:gap-3 group"
+            >
+              <div className="w-5 h-5 md:w-6 md:h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center shrink-0 font-medium text-xs md:text-sm">
                 {index + 1}
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <Input
                   placeholder={`Ingrediente ${index + 1}`}
                   value={ingredient.name}
@@ -371,59 +378,71 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                   }
                   minLength={2}
                   maxLength={200}
+                  className="text-sm md:text-base"
                 />
               </div>
               {formData.ingredients.length > 1 && (
                 <Button
                   type="button"
                   onClick={() => removeIngredient(index)}
-                  className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                  className="p-1 md:p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-70 md:opacity-0 group-hover:opacity-100"
+                  size="small"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3 h-3 md:w-4 md:h-4" />
                 </Button>
               )}
             </div>
           ))}
         </div>
 
-        <div className="flex gap-3 mt-4">
-          <Input
-            id="new-ingredient"
-            placeholder="Novo ingrediente..."
-            value={newIngredient}
-            onChange={(e) => setNewIngredient(e.target.value)}
-            onKeyPress={(e) => handleKeyPress(e, addIngredient)}
-          />
+        <div className="flex gap-2 md:gap-3 mt-4 flex-col sm:flex-row">
+          <div className="flex-1 min-w-0">
+            <Input
+              id="new-ingredient"
+              placeholder="Novo ingrediente..."
+              value={newIngredient}
+              onChange={(e) => setNewIngredient(e.target.value)}
+              onKeyPress={(e) => handleKeyPress(e, addIngredient)}
+              className="text-sm md:text-base"
+            />
+          </div>
           <Button
             type="button"
             variant="outline"
             icon={Plus}
             onClick={addIngredient}
             disabled={!newIngredient.trim()}
+            className="self-stretch sm:self-start"
+            size="small"
           >
-            Adicionar
+            <span className="hidden sm:inline">Adicionar</span>
+            <span className="sm:hidden">Add</span>
           </Button>
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-        <h2 className="text-2xl font-bold text-foreground mb-6">
+      {/* Modo de Preparo */}
+      <div className="bg-card border border-border rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4 md:mb-6">
           Modo de Preparo *
         </h2>
 
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           {formData.instructions.map((instruction, index) => (
-            <div key={instruction.id} className="flex items-start gap-3 group">
-              <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center shrink-0 font-semibold text-sm mt-1">
+            <div
+              key={instruction.id}
+              className="flex items-start gap-2 md:gap-3 group"
+            >
+              <div className="w-6 h-6 md:w-8 md:h-8 bg-primary text-white rounded-full flex items-center justify-center shrink-0 font-semibold text-xs md:text-sm mt-1">
                 {index + 1}
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <textarea
                   placeholder={`Passo ${index + 1}`}
                   value={instruction.content}
                   onChange={(e) => updateInstruction(index, e.target.value)}
-                  rows={3}
-                  className="w-full p-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-none transition-colors"
+                  rows={2}
+                  className="w-full p-3 border border-border rounded-lg md:rounded-xl focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-vertical min-h-20 md:min-h-[100px] text-sm md:text-base leading-relaxed"
                   minLength={8}
                   maxLength={500}
                 />
@@ -432,53 +451,59 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
                 <button
                   type="button"
                   onClick={() => removeInstruction(index)}
-                  className="p-2 text-red-500 hover:bg-red-50  rounded-lg transition-colors opacity-0 group-hover:opacity-100 mt-1"
+                  className="p-1 md:p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-70 md:opacity-0 group-hover:opacity-100 mt-1"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3 h-3 md:w-4 md:h-4" />
                 </button>
               )}
             </div>
           ))}
         </div>
 
-        <div className="flex gap-3 mt-4">
-          <textarea
-            placeholder="Novo passo..."
-            value={newInstruction}
-            onChange={(e) => setNewInstruction(e.target.value)}
-            onKeyPress={(e) => handleKeyPress(e, addInstruction)}
-            rows={3}
-            className="flex-1 p-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-none transition-colors"
-          />
+        <div className="flex gap-2 md:gap-3 mt-4 flex-col sm:flex-row">
+          <div className="flex-1 min-w-0">
+            <textarea
+              placeholder="Novo passo..."
+              value={newInstruction}
+              onChange={(e) => setNewInstruction(e.target.value)}
+              onKeyPress={(e) => handleKeyPress(e, addInstruction)}
+              rows={2}
+              className="w-full p-3 border border-border rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-vertical min-h-20 md:min-h-[100px] text-sm md:text-base leading-relaxed"
+            />
+          </div>
           <Button
             type="button"
             variant="outline"
             icon={Plus}
             onClick={addInstruction}
             disabled={!newInstruction.trim()}
-            className="self-start"
+            className="self-stretch sm:self-start"
+            size="small"
           >
-            Adicionar
+            <span className="hidden sm:inline">Adicionar</span>
+            <span className="sm:hidden">Add</span>
           </Button>
         </div>
       </div>
 
       {/* Tags */}
-      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-        <h2 className="text-2xl font-bold text-foreground mb-6">Tags</h2>
+      <div className="bg-card border border-border rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4 md:mb-6">
+          Tags
+        </h2>
 
         {formData.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {formData.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium flex items-center gap-1 group hover:bg-primary/20 transition-colors"
+                className="px-2 py-1 md:px-3 md:py-1 bg-primary/10 text-primary rounded-full text-xs md:text-sm font-medium flex items-center gap-1 group hover:bg-primary/20 transition-colors"
               >
-                {tag}
+                <span className="max-w-[120px] truncate">{tag}</span>
                 <button
                   type="button"
                   onClick={() => removeTag(tag)}
-                  className="hover:text-primary-dark text-xs"
+                  className="hover:text-primary-dark text-xs shrink-0"
                 >
                   ×
                 </button>
@@ -487,32 +512,40 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           </div>
         )}
 
-        <div className="flex gap-3">
-          <Input
-            placeholder="Nova tag (ex: Sobremesa, Saudável, Brasileira...)"
-            value={newTag}
-            onChange={(e) => setNewTag(e.target.value)}
-            onKeyPress={(e) => handleKeyPress(e, addTag)}
-          />
+        <div className="flex gap-2 md:gap-3 flex-col sm:flex-row">
+          <div className="flex-1 min-w-0">
+            <Input
+              placeholder="Nova tag (ex: Sobremesa, Saudável, Brasileira...)"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              onKeyPress={(e) => handleKeyPress(e, addTag)}
+              className="text-sm md:text-base"
+            />
+          </div>
           <Button
             type="button"
             variant="outline"
             icon={Plus}
             onClick={addTag}
             disabled={!newTag.trim()}
+            className="self-stretch sm:self-start"
+            size="small"
           >
-            Adicionar
+            <span className="hidden sm:inline">Adicionar</span>
+            <span className="sm:hidden">Add</span>
           </Button>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-4 pt-6 border-t border-border">
+      <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 md:gap-4 pt-4 md:pt-6 border-t border-border">
         <Button
           type="button"
           variant="outline"
           onClick={onCancel}
           disabled={totalIsLoading}
+          className="w-full sm:w-auto"
+          size="small"
         >
           Cancelar
         </Button>
@@ -521,7 +554,8 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
           variant="primary"
           isLoading={totalIsLoading}
           disabled={totalIsLoading}
-          className="min-w-32"
+          className="w-full sm:w-auto min-w-32"
+          size="small"
         >
           {totalIsLoading ? 'Criando...' : 'Criar Receita'}
         </Button>
