@@ -7,13 +7,7 @@ export class UserHttpGateway implements UserGateway {
   constructor(private http: AxiosInstance) {}
   async createUser(user: IUser): Promise<ILoginResult> {
     try {
-      const response = await this.http.post<IUser>('/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      });
+      const response = await this.http.post<IUser>('/users', user);
       if (response.status != 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       } else {

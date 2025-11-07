@@ -119,6 +119,7 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          minLength={8}
           disabled={isLoading}
           endAdornment={
             <Button
@@ -145,6 +146,7 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
+          minLength={8}
           disabled={isLoading}
           error={error || undefined}
           endAdornment={
@@ -226,7 +228,7 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
       </div>
 
       {/* Botões de Registro Social */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* <div className="grid grid-cols-2 gap-3">
         <Button
           type="button"
           variant="outline"
@@ -269,7 +271,7 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
           </svg>
           Facebook
         </Button>
-      </div>
+      </div> */}
 
       {/* Link para Login */}
       <div className="text-center pt-4 border-t border-border/50">
