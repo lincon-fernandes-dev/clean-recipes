@@ -24,7 +24,7 @@ export const SimulatedError: Story = {
   render: (args) => {
     // Renderiza o LoginForm e simula um erro
     return (
-      <div className="w-full max-w-sm mx-auto p-4 border rounded-lg">
+      <div className="w-full max-w-sm max-h-[90vh] mx-auto p-4 border rounded-lg">
         <UserRegisterForm
           {...args}
           // A simulação de erro depende da lógica interna do LoginForm

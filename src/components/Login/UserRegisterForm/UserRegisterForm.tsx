@@ -1,44 +1,61 @@
+// src/components/UserRegisterForm/UserRegisterForm.tsx
 import { useAuth } from '@/context/AuthContext';
-import { ChefHat, Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { ChefHat, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import * as React from 'react';
 import { useState } from 'react';
-import Button from '../templates/base/Button/Button';
-import Input from '../templates/form/Input/Input';
+import Button from '../../templates/base/Button/Button';
+import Input from '../../templates/form/Input/Input';
 
-export interface ILoginFormProps {
-  onLoginSucess: () => void;
+export interface IUserRegisterFormProps {
+  onRegisterSuccess: () => void;
 }
 
-const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
+const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
+  onRegisterSuccess,
+}) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    // Validação básica
-    if (!email || !password) {
+    // Validações
+    if (!name || !email || !password || !confirmPassword) {
       setError('Por favor, preencha todos os campos.');
       setIsLoading(false);
       return;
     }
 
-    try {
-      const result = await login(email, password);
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem.');
+      setIsLoading(false);
+      return;
+    }
 
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres.');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const result = await register(name, email, password);
       if (!result.success) {
         setError(result.message);
       } else {
-        onLoginSucess();
+        onRegisterSuccess();
       }
     } catch (error) {
-      setError('Erro durante o login. Tente novamente.' + error);
+      setError('Erro durante o registro. Tente novamente.' + error);
     } finally {
       setIsLoading(false);
     }
@@ -48,22 +65,44 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
     setShowPassword(!showPassword);
   };
 
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="text-center">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 max-h-[50vh] overflow-auto"
+    >
+      {/* Header do Formulário */}
+      <div className="text-center ">
         <div className="flex justify-center mb-3">
-          <div className="w-12 h-12 bg-linear-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+          <div className="hidden md:block w-12 h-12 bg-linear-to-br from-primary to-accent rounded-xl items-center justify-center">
             <ChefHat className="w-6 h-6 text-white" />
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-foreground ">
-          Entre na Sua Cozinha
+        <h2 className="text-2xl font-bold text-foreground">
+          Junte-se à Nossa Cozinha
         </h2>
         <p className="text-muted-foreground mt-2">
-          Digite suas credenciais para acessar sua conta
+          Crie sua conta para começar sua jornada culinária
         </p>
       </div>
+
+      {/* Campos do Formulário */}
       <div className="space-y-4">
+        <Input
+          label="Nome Completo"
+          type="text"
+          placeholder="Seu nome completo"
+          minLength={4}
+          icon={User}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          disabled={isLoading}
+        />
+
         <Input
           label="Email"
           type="email"
@@ -74,6 +113,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
           required
           disabled={isLoading}
         />
+
         <Input
           label="Senha"
           type={showPassword ? 'text' : 'password'}
@@ -82,8 +122,8 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          minLength={8}
           disabled={isLoading}
-          error={error || undefined}
           endAdornment={
             <Button
               type="button"
@@ -100,19 +140,37 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
             </Button>
           }
         />
-      </div>
 
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={() => console.log('Esqueci senha clicado')}
-          className="text-sm text-primary hover:text-primary-dark font-medium transition-colors duration-200"
+        <Input
+          label="Confirmar Senha"
+          type={showConfirmPassword ? 'text' : 'password'}
+          placeholder="••••••••"
+          icon={Lock}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+          minLength={8}
           disabled={isLoading}
-        >
-          Esqueceu sua senha?
-        </button>
+          error={error || undefined}
+          endAdornment={
+            <Button
+              type="button"
+              size="small"
+              onClick={toggleConfirmPasswordVisibility}
+              className="text-muted-foreground hover:text-foreground transition-colors duration-200 p-1"
+              disabled={isLoading}
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </Button>
+          }
+        />
       </div>
 
+      {/* Mensagem de Erro */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-3">
           <p className="text-red-700 text-sm flex items-center">
@@ -122,6 +180,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
         </div>
       )}
 
+      {/* Botão de Registro */}
       <Button
         type="submit"
         variant="primary"
@@ -130,25 +189,15 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
         isDisabled={isLoading}
         className="w-full bg-linear-to-r from-primary to-accent hover:from-primary-dark hover:to-accent-dark shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
       >
-        {isLoading ? 'Entrando...' : 'Entrar na Cozinha'}
+        {isLoading ? 'Criando Conta...' : 'Criar Minha Conta'}
       </Button>
-
-      {/* <div className="relative flex items-center py-4">
-        <div className="grow border-t border-border/50"></div>
-        <span className="shrink mx-4 text-muted-foreground text-sm">ou</span>
-        <div className="grow border-t border-border/50"></div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
+      {/* Botões de Registro Social */}
+      {/* <div className="grid grid-cols-2 gap-3">
         <Button
           type="button"
           variant="outline"
           size="medium"
-          onClick={() =>
-            alert(
-              'authenticação com google a ser implementada, utilize admin@admin com qualquer senha para logar'
-            )
-          }
+          onClick={() => console.log('Registro com Google')}
           disabled={true}
           className="w-full border-border hover:bg-card transition-colors duration-200"
         >
@@ -177,11 +226,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
           type="button"
           variant="outline"
           size="medium"
-          onClick={() =>
-            alert(
-              'authenticação com facebook a ser implementada, utilize admin@admin com qualquer senha para logar'
-            )
-          }
+          onClick={() => console.log('Registro com Facebook')}
           disabled={true}
           className="w-full border-border hover:bg-card transition-colors duration-200"
         >
@@ -195,4 +240,4 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
   );
 };
 
-export default LoginForm;
+export default UserRegisterForm;

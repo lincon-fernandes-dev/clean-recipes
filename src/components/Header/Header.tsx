@@ -4,7 +4,7 @@ import { Moon, Plus, Sun } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import LoginDialog from '../LoginDialog/LoginDialog';
+import LoginDialog from '../Login/LoginDialog/LoginDialog';
 import Button from '../templates/base/Button/Button';
 
 const Header: React.FC = () => {

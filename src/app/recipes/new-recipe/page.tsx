@@ -1,6 +1,6 @@
 'use client';
 
-import AuthGuard from '@/components/AuthGuard/AuthGuard';
+import AuthGuard from '@/components/Login/AuthGuard/AuthGuard';
 import {
   CreateRecipeData,
   RecipeForm,

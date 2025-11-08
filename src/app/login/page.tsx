@@ -1,6 +1,6 @@
 'use client';
 
-import LoginForm from '@/components/LoginForm/LoginForm';
+import LoginForm from '@/components/Login/LoginForm/LoginForm';
 import Card from '@/components/templates/base/Card/Card';
 import { useAuth } from '@/context/AuthContext';
 import { ChefHat, Sparkles } from 'lucide-react';

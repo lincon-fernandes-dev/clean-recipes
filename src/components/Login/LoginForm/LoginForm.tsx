@@ -1,61 +1,43 @@
-// src/components/UserRegisterForm/UserRegisterForm.tsx
 import { useAuth } from '@/context/AuthContext';
-import { ChefHat, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+import { ChefHat, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import * as React from 'react';
 import { useState } from 'react';
-import Button from '../templates/base/Button/Button';
-import Input from '../templates/form/Input/Input';
+import Button from '../../templates/base/Button/Button';
+import Input from '../../templates/form/Input/Input';
 
-export interface IUserRegisterFormProps {
-  onRegisterSuccess: () => void;
+export interface ILoginFormProps {
+  onLoginSucess: () => void;
 }
 
-const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
-  onRegisterSuccess,
-}) => {
-  const [name, setName] = useState('');
+const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSucess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { register } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    // Validações
-    if (!name || !email || !password || !confirmPassword) {
+    if (!email || !password) {
       setError('Por favor, preencha todos os campos.');
       setIsLoading(false);
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError('As senhas não coincidem.');
-      setIsLoading(false);
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres.');
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const result = await register(name, email, password);
+      const result = await login(email, password);
+
       if (!result.success) {
         setError(result.message);
       } else {
-        onRegisterSuccess();
+        onLoginSucess();
       }
     } catch (error) {
-      setError('Erro durante o registro. Tente novamente.' + error);
+      setError('Erro durante o login. Tente novamente.' + error);
     } finally {
       setIsLoading(false);
     }
@@ -65,41 +47,23 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
     setShowPassword(!showPassword);
   };
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Header do Formulário */}
       <div className="text-center">
         <div className="flex justify-center mb-3">
           <div className="w-12 h-12 bg-linear-to-br from-primary to-accent rounded-xl flex items-center justify-center">
             <ChefHat className="w-6 h-6 text-white" />
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-foreground">
-          Junte-se à Nossa Cozinha
+        <h2 className="text-2xl font-bold text-foreground ">
+          Entre na Sua Cozinha
         </h2>
-        <p className="text-muted-foreground mt-2">
-          Crie sua conta para começar sua jornada culinária
-        </p>
+        <span className="text-xs line">
+          Para a sua segurança nao armazenamos nenhuma senha, crie sua conta com
+          um email, e loge com qualquer senha de 8 caracteres
+        </span>
       </div>
-
-      {/* Campos do Formulário */}
       <div className="space-y-4">
-        <Input
-          label="Nome Completo"
-          type="text"
-          placeholder="Seu nome completo"
-          minLength={4}
-          icon={User}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          disabled={isLoading}
-        />
-
         <Input
           label="Email"
           type="email"
@@ -110,7 +74,6 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
           required
           disabled={isLoading}
         />
-
         <Input
           label="Senha"
           type={showPassword ? 'text' : 'password'}
@@ -119,8 +82,8 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          minLength={8}
           disabled={isLoading}
+          error={error || undefined}
           endAdornment={
             <Button
               type="button"
@@ -137,68 +100,19 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
             </Button>
           }
         />
-
-        <Input
-          label="Confirmar Senha"
-          type={showConfirmPassword ? 'text' : 'password'}
-          placeholder="••••••••"
-          icon={Lock}
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          minLength={8}
-          disabled={isLoading}
-          error={error || undefined}
-          endAdornment={
-            <Button
-              type="button"
-              size="small"
-              onClick={toggleConfirmPasswordVisibility}
-              className="text-muted-foreground hover:text-foreground transition-colors duration-200 p-1"
-              disabled={isLoading}
-            >
-              {showConfirmPassword ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
-            </Button>
-          }
-        />
       </div>
 
-      {/* Termos e Condições */}
-      <div className="flex items-start space-x-2">
-        <input
-          type="checkbox"
-          id="terms"
-          required
-          className="mt-1 w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => console.log('Esqueci senha clicado')}
+          className="text-sm text-primary hover:text-primary-dark font-medium transition-colors duration-200"
           disabled={isLoading}
-        />
-        <label htmlFor="terms" className="text-sm text-muted-foreground">
-          Concordo com os{' '}
-          <button
-            type="button"
-            onClick={() => console.log('Termos de uso clicado')}
-            className="text-primary hover:text-primary-dark font-medium transition-colors duration-200 hover:underline"
-            disabled={isLoading}
-          >
-            Termos de Uso
-          </button>{' '}
-          e{' '}
-          <button
-            type="button"
-            onClick={() => console.log('Política de privacidade clicado')}
-            className="text-primary hover:text-primary-dark font-medium transition-colors duration-200 hover:underline"
-            disabled={isLoading}
-          >
-            Política de Privacidade
-          </button>
-        </label>
+        >
+          Esqueceu sua senha?
+        </button>
       </div>
 
-      {/* Mensagem de Erro */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-3">
           <p className="text-red-700 text-sm flex items-center">
@@ -208,7 +122,6 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
         </div>
       )}
 
-      {/* Botão de Registro */}
       <Button
         type="submit"
         variant="primary"
@@ -217,23 +130,25 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
         isDisabled={isLoading}
         className="w-full bg-linear-to-r from-primary to-accent hover:from-primary-dark hover:to-accent-dark shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
       >
-        {isLoading ? 'Criando Conta...' : 'Criar Minha Conta'}
+        {isLoading ? 'Entrando...' : 'Entrar na Cozinha'}
       </Button>
 
-      {/* Divisor */}
-      <div className="relative flex items-center py-4">
+      {/* <div className="relative flex items-center py-4">
         <div className="grow border-t border-border/50"></div>
         <span className="shrink mx-4 text-muted-foreground text-sm">ou</span>
         <div className="grow border-t border-border/50"></div>
       </div>
 
-      {/* Botões de Registro Social */}
-      {/* <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <Button
           type="button"
           variant="outline"
           size="medium"
-          onClick={() => console.log('Registro com Google')}
+          onClick={() =>
+            alert(
+              'authenticação com google a ser implementada, utilize admin@admin com qualquer senha para logar'
+            )
+          }
           disabled={true}
           className="w-full border-border hover:bg-card transition-colors duration-200"
         >
@@ -262,7 +177,11 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
           type="button"
           variant="outline"
           size="medium"
-          onClick={() => console.log('Registro com Facebook')}
+          onClick={() =>
+            alert(
+              'authenticação com facebook a ser implementada, utilize admin@admin com qualquer senha para logar'
+            )
+          }
           disabled={true}
           className="w-full border-border hover:bg-card transition-colors duration-200"
         >
@@ -272,22 +191,8 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
           Facebook
         </Button>
       </div> */}
-
-      {/* Link para Login */}
-      <div className="text-center pt-4 border-t border-border/50">
-        <p className="text-sm text-muted-foreground">
-          Já tem uma conta?{' '}
-          <button
-            type="button"
-            className="text-primary hover:text-primary-dark font-semibold transition-colors duration-200 hover:underline"
-            disabled={isLoading}
-          >
-            Faça login aqui
-          </button>
-        </p>
-      </div>
     </form>
   );
 };
 
-export default UserRegisterForm;
+export default LoginForm;
