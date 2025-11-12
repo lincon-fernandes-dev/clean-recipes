@@ -24,7 +24,7 @@ const RecipeFeed: React.FC<IRecipeFeedProps> = ({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
       {recipes.map((recipe) => (
         <RecipeCard
-          key={recipe.id}
+          key={recipe.idRecipe}
           recipe={recipe}
           onVote={(id) => onRecipeAction('vote', id)}
           onComment={(id) => onRecipeAction('comment', id)}

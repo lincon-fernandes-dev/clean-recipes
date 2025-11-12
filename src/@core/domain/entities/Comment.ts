@@ -2,54 +2,49 @@ import { IComment } from '@/Domain/Interfaces/IComment';
 import { IUser } from '@/Domain/Interfaces/IUser';
 
 export class Comment implements IComment {
-  private _id: string;
+  private _id: number;
+  private _idUser: number;
+  private _idRecipe: number;
+  private _parentCommentId?: number;
   private _content: string;
   private _author: IUser;
-  private _recipeId: string;
-  private _parentCommentId?: string;
   private _likes: number;
-  private _likedBy: Set<string>;
-  private _createdAt?: Date;
-  private _updatedAt?: Date;
+  private _createdAt: Date;
+  private _updatedAt: Date;
+  private _replies: Comment[];
+  private _isCommentLiked: boolean;
 
   constructor(props: IComment) {
     this.validate(props);
 
-    this._id = props.id;
-    this._content = props.content;
+    this._id = props.idComment;
+    this._idUser = props.idUser;
     this._author = props.author;
-    this._recipeId = props.recipeId;
+    this._idRecipe = props.idRecipe;
     this._parentCommentId = props.parentCommentId;
-    this._likes = props.likes;
-    this._likedBy = props.likedBy;
+    this._content = props.content;
+    this._replies = props.replies?.map((r) => new Comment(r)) || [];
+    this._likes = props.likes ?? 0;
+    this._isCommentLiked = props.isCommentLiked ?? false;
     this._createdAt = props.createdAt;
     this._updatedAt = props.updatedAt;
   }
 
   private validate(props: IComment): void {
-    if (!props.id.trim()) {
-      throw new Error('Comment ID is required');
-    }
-
-    if (!props.content.trim()) {
-      throw new Error('Comment content is required');
+    if (!props.content?.trim()) {
+      throw new Error('Comment content cannot be empty');
     }
 
     if (props.content.length > 1000) {
       throw new Error('Comment content cannot exceed 1000 characters');
     }
 
-    if (!props.recipeId.trim()) {
-      throw new Error('Recipe ID is required');
-    }
-
-    if (props.likes < 0) {
-      throw new Error('Likes cannot be negative');
+    if (!props.author) {
+      throw new Error('Comment must have an author');
     }
   }
 
-  // Getters
-  get id(): string {
+  get idComment(): number {
     return this._id;
   }
 
@@ -57,15 +52,27 @@ export class Comment implements IComment {
     return this._content;
   }
 
+  get idUser(): number {
+    return this._idUser;
+  }
+
+  get idRecipe(): number {
+    return this._idRecipe;
+  }
+
+  get isCommentLiked(): boolean {
+    return this._isCommentLiked;
+  }
+
   get author(): IUser {
     return this._author;
   }
 
-  get recipeId(): string {
-    return this._recipeId;
+  get recipeId(): number {
+    return this._idRecipe;
   }
 
-  get parentCommentId(): string | undefined {
+  get parentCommentId(): number | undefined {
     return this._parentCommentId;
   }
 
@@ -73,15 +80,15 @@ export class Comment implements IComment {
     return this._likes;
   }
 
-  get likedBy(): Set<string> {
-    return new Set(this._likedBy);
+  get replies(): Comment[] {
+    return this._replies;
   }
 
-  get createdAt(): Date | undefined {
+  get createdAt(): Date {
     return this._createdAt;
   }
 
-  get updatedAt(): Date | undefined {
+  get updatedAt(): Date {
     return this._updatedAt;
   }
 
@@ -99,28 +106,23 @@ export class Comment implements IComment {
     this._updatedAt = new Date();
   }
 
-  like(userId: string): void {
-    if (this._likedBy.has(userId)) {
-      throw new Error('User already liked this comment');
-    }
-
-    this._likedBy.add(userId);
+  like(): void {
     this._likes += 1;
+    this._isCommentLiked = true;
     this._updatedAt = new Date();
   }
 
-  unlike(userId: string): void {
-    if (!this._likedBy.has(userId)) {
-      throw new Error('User has not liked this comment');
-    }
-
-    this._likedBy.delete(userId);
+  unlike(): void {
     this._likes = Math.max(0, this._likes - 1);
+    this._isCommentLiked = false;
     this._updatedAt = new Date();
   }
 
-  hasLiked(userId: string): boolean {
-    return this._likedBy.has(userId);
+  addReply(reply: Comment): void {
+    if (reply.parentCommentId !== this.idComment) {
+      throw new Error('Reply must reference this comment as parent');
+    }
+    this._replies.push(reply);
   }
 
   canEdit(userId: number): boolean {
@@ -135,32 +137,7 @@ export class Comment implements IComment {
     return !!this._parentCommentId;
   }
 
-  // Factory method
-  static create(
-    props: Omit<IComment, 'likes' | 'likedBy' | 'createdAt' | 'updatedAt'>
-  ): Comment {
-    return new Comment({
-      ...props,
-      likes: 0,
-      likedBy: new Set(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-  }
-
-  // Factory method for replies
-  static createReply(
-    props: Omit<
-      IComment,
-      'likes' | 'likedBy' | 'createdAt' | 'updatedAt' | 'parentCommentId'
-    > & { parentCommentId: string }
-  ): Comment {
-    return new Comment({
-      ...props,
-      likes: 0,
-      likedBy: new Set(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+  hasReplies(): boolean {
+    return this._replies.length > 0;
   }
 }

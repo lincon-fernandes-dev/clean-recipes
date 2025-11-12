@@ -6,7 +6,7 @@ import { INutritionInfo } from './INutritionInfo';
 import { IUser } from './IUser';
 
 export interface IRecipe {
-  id?: string;
+  idRecipe?: string;
   title: string;
   description: string;
   imageUrl: string;
@@ -15,12 +15,12 @@ export interface IRecipe {
   difficulty: DifficultyType;
   ingredients: IIngredient[];
   instructions: IInstruction[];
+  comments?: IComment[];
   tags?: string[];
   author: IUser;
-  nutrition?: INutritionInfo;
+  nutritionInfo?: INutritionInfo;
   votes?: number;
   votedBy?: Set<string>;
-  comments?: IComment[];
   rating?: number;
   createdAt?: Date;
   updatedAt?: Date;

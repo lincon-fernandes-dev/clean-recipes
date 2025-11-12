@@ -28,7 +28,7 @@ export class RecipeHttpGateway implements RecipeGateway {
     return response.data.map((recipeData) => new Recipe(recipeData));
   }
   async update(recipe: Recipe): Promise<void> {
-    await this.http.put(`/recipes/${recipe.id}`, recipe);
+    await this.http.put(`/recipes/${recipe.idRecipe}`, recipe);
   }
   async delete(id: string): Promise<void> {
     await this.http.delete(`/recipes/${id}`);

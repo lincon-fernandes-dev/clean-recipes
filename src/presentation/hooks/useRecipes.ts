@@ -47,7 +47,6 @@ export const useRecipes = () => {
     });
   };
 
-  // Mutation para criar uma receita
   const useCreateRecipe = () => {
     return useMutation({
       mutationFn: (recipe: CreateRecipeDTO) =>
@@ -58,13 +57,14 @@ export const useRecipes = () => {
     });
   };
 
-  // Mutation para atualizar uma receita
   const useUpdateRecipe = () => {
     return useMutation({
       mutationFn: (recipe: Recipe) => updateRecipeUseCase.execute(recipe),
       onSuccess: (_, variables) => {
         queryClient.invalidateQueries({ queryKey: ['recipes'] });
-        queryClient.invalidateQueries({ queryKey: ['recipe', variables.id] });
+        queryClient.invalidateQueries({
+          queryKey: ['recipe', variables.idRecipe],
+        });
       },
     });
   };

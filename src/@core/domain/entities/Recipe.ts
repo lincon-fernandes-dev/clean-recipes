@@ -8,7 +8,7 @@ import { DifficultyType } from '@/Domain/types/DifficultyType';
 import { Comment } from './Comment';
 
 export class Recipe implements IRecipe {
-  private _id?: string;
+  private _idRecipe?: string;
   private _title: string;
   private _description: string;
   private _imageUrl: string;
@@ -19,17 +19,17 @@ export class Recipe implements IRecipe {
   private _instructions: IInstruction[];
   private _tags?: string[];
   private _author: IUser;
-  private _nutrition?: INutritionInfo;
+  private _nutritionInfo?: INutritionInfo;
   private _votes?: number;
   private _votedBy?: Set<string>;
-  private _comments: Comment[];
+  private _comments: Comment[] = [];
   private _createdAt?: Date;
   private _updatedAt?: Date;
 
   constructor(props: IRecipe) {
     this.validate(props);
 
-    this._id = props.id;
+    this._idRecipe = props.idRecipe;
     this._title = props.title;
     this._description = props.description;
     this._imageUrl = props.imageUrl;
@@ -40,13 +40,11 @@ export class Recipe implements IRecipe {
     this._instructions = props.instructions;
     this._tags = props.tags || [];
     this._author = props.author;
-    this._nutrition = props.nutrition;
+    this._nutritionInfo = props.nutritionInfo;
     this._votes = props.votes;
     this._votedBy = props.votedBy;
 
-    this._comments = (props.comments || []).map((comment) =>
-      comment instanceof Comment ? comment : new Comment(comment)
-    );
+    this._comments = props.comments?.map((c) => new Comment(c)) || [];
 
     this._createdAt = props.createdAt;
     this._updatedAt = props.updatedAt;
@@ -83,8 +81,8 @@ export class Recipe implements IRecipe {
   }
 
   // Getters
-  get id(): string | undefined {
-    return this._id;
+  get idRecipe(): string | undefined {
+    return this._idRecipe;
   }
 
   get title(): string {
@@ -127,8 +125,8 @@ export class Recipe implements IRecipe {
     return this._author;
   }
 
-  get nutrition(): INutritionInfo | undefined {
-    return this._nutrition;
+  get nutritionInfo(): INutritionInfo | undefined {
+    return this._nutritionInfo;
   }
 
   get votes(): number | undefined {
@@ -238,39 +236,5 @@ export class Recipe implements IRecipe {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-  }
-
-  // Método para converter de volta para interface (se necessário)
-  toInterface(): IRecipe {
-    return {
-      id: this._id,
-      title: this._title,
-      description: this._description,
-      imageUrl: this._imageUrl,
-      preparationTime: this._preparationTime,
-      servings: this._servings,
-      difficulty: this._difficulty,
-      ingredients: this._ingredients,
-      instructions: this._instructions,
-      tags: this._tags,
-      author: this._author,
-      nutrition: this._nutrition,
-      votes: this._votes,
-      votedBy: this._votedBy,
-      comments: this._comments.map((comment) => ({
-        id: comment.id,
-        content: comment.content,
-        author: comment.author,
-        recipeId: comment.recipeId,
-        parentCommentId: comment.parentCommentId,
-        likes: comment.likes,
-        likedBy: comment.likedBy,
-        createdAt: comment.createdAt,
-        updatedAt: comment.updatedAt,
-      })),
-      rating: this.rating,
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
-    };
   }
 }

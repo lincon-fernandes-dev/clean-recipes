@@ -1,14 +1,16 @@
 import { IUser } from './IUser';
 
 export interface IComment {
-  id: string;
-  recipeId: string;
-  parentCommentId?: string;
+  idComment: number;
+  idUser: number;
+  idRecipe: number;
+  parentCommentId?: number;
+  parentComment?: IComment;
   author: IUser;
   content: string;
   likes: number;
   replies?: IComment[];
-  likedBy: Set<string>;
-  createdAt?: Date;
-  updatedAt?: Date;
+  isCommentLiked: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

@@ -31,7 +31,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
 
   return (
     <Card className="flex flex-col overflow-hidden h-full">
-      <Link href={`/recipes/${recipe.id}`} passHref>
+      <Link href={`/recipes/${recipe.idRecipe}`} passHref>
         <div className="h-48 bg-gray-200 relative rounded-xl overflow-hidden mb-4">
           <div
             className="absolute inset-0 bg-cover bg-center "
@@ -49,7 +49,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
         </div>
       </Link>
       <div className="p-4 flex flex-col grow">
-        <Link href={`/recipes/${recipe.id}`} passHref>
+        <Link href={`/recipes/${recipe.idRecipe}`} passHref>
           <h3 className="text-xl font-bold text-accent truncate mb-1">
             {recipe.title}
           </h3>
@@ -66,7 +66,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
             variant="primary"
             size="small"
             icon={Heart}
-            onClick={() => onVote(recipe.id!)}
+            onClick={() => onVote(recipe.idRecipe!)}
             aria-label={`Votar na receita ${recipe.title}`}
           >
             {recipe.votes} Votos
@@ -75,7 +75,7 @@ const RecipeCard: React.FC<IRecipeCardProps> = ({
             variant="secondary"
             size="small"
             icon={MessageSquare}
-            onClick={() => onComment(recipe.id!)}
+            onClick={() => onComment(recipe.idRecipe!)}
             aria-label={`Ver comentários de ${recipe.title}`}
           >
             {recipe.comments?.length} Opiniões

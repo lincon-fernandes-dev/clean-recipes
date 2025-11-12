@@ -1,34 +1,27 @@
-// src/components/Comments/Comments.tsx
 'use client';
 
 import { Comment } from '@/@core/domain/entities/Comment';
-import {
-  Heart,
-  MessageCircle,
-  MoreVertical,
-  Reply,
-  Send,
-  Verified,
-} from 'lucide-react';
+import { Heart, MessageCircle, MoreVertical, Reply, Send } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import Button from '../templates/base/Button/Button';
 
 interface CommentsProps {
   comments: Comment[];
-  onAddComment: (content: string, parentId?: string) => void;
-  onLikeComment: (commentId: string) => void;
+  onAddComment: (content: string, parentId?: number) => void;
+  currentUserId?: number;
 }
 
 const Comments: React.FC<CommentsProps> = ({
   comments,
   onAddComment,
-  onLikeComment,
+  currentUserId,
 }) => {
   const [newComment, setNewComment] = useState('');
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  // const [expandedReplies, setExpandedReplies] = useState<Set<string>>(
-  //   new Set()
-  // );
+  const [replyingTo, setReplyingTo] = useState<number | null>(null);
+  const [expandedReplies, setExpandedReplies] = useState<Set<number>>(
+    new Set()
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,20 +32,24 @@ const Comments: React.FC<CommentsProps> = ({
     }
   };
 
-  // const toggleReplies = (commentId: string) => {
-  //   const newExpanded = new Set(expandedReplies);
-  //   if (newExpanded.has(commentId)) {
-  //     newExpanded.delete(commentId);
-  //   } else {
-  //     newExpanded.add(commentId);
-  //   }
-  //   setExpandedReplies(newExpanded);
-  // };
+  const onLikeComment = (idComment: number) => {
+    console.log(idComment);
+  };
+
+  const toggleReplies = (commentId: number) => {
+    const newExpanded = new Set(expandedReplies);
+    if (newExpanded.has(commentId)) {
+      newExpanded.delete(commentId);
+    } else {
+      newExpanded.add(commentId);
+    }
+    setExpandedReplies(newExpanded);
+  };
 
   const formatTimeAgo = (timestamp: Date) => {
     const now = new Date();
     const diffInHours = Math.floor(
-      (now.getTime() - timestamp.getTime()) / (1000 * 60 * 60)
+      (now.getTime() - new Date(timestamp).getTime()) / (1000 * 60 * 60)
     );
 
     if (diffInHours < 1) return 'Agora mesmo';
@@ -66,29 +63,35 @@ const Comments: React.FC<CommentsProps> = ({
     depth = 0,
   }) => {
     const isTopLevel = depth === 0;
-    // const showReplies = expandedReplies.has(comment.id);
+    const showReplies = expandedReplies.has(comment.idComment);
+    const hasReplies = comment.hasReplies();
+    const canReply = isTopLevel && currentUserId;
 
     return (
       <div
         className={`${isTopLevel ? 'border-b border-border pb-6 mb-6' : 'mt-4'}`}
       >
-        {/* Comment Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-linear-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold text-sm">
-              {comment.author.name.charAt(0)}
+            <div className="w-10 h-10 bg-linear-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold text-sm relative overflow-hidden">
+              {comment.author.avatar ? (
+                <Image
+                  fill
+                  alt={comment.author.name}
+                  src={comment.author.avatar}
+                />
+              ) : (
+                comment.author.name.charAt(0)
+              )}
             </div>
             <div>
               <div className="flex items-center space-x-2">
                 <span className="font-semibold text-foreground">
                   {comment.author.name}
                 </span>
-                {comment.author.isVerified && (
-                  <Verified className="w-4 h-4 text-blue-500" />
-                )}
               </div>
               <span className="text-sm text-muted-foreground">
-                {formatTimeAgo(comment.createdAt!)}
+                {formatTimeAgo(comment.createdAt)}
               </span>
             </div>
           </div>
@@ -98,32 +101,32 @@ const Comments: React.FC<CommentsProps> = ({
           </button>
         </div>
 
-        {/* Comment Content */}
         <div className="ml-13">
           <p className="text-foreground leading-relaxed mb-3">
             {comment.content}
           </p>
 
-          {/* Comment Actions */}
           <div className="flex items-center space-x-4">
             <button
-              onClick={() => onLikeComment(comment.id)}
+              onClick={() => onLikeComment(comment.idComment)}
               className={`flex items-center space-x-1 transition-colors duration-200 ${
-                comment.hasLiked('u2')
+                comment.isCommentLiked
                   ? 'text-red-500'
-                  : 'text-muted-foreground hover:text-red-500'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <Heart
-                className={`w-4 h-4 ${comment.hasLiked('u2') ? 'fill-current' : ''}`}
+                className={`w-4 h-4 ${comment.isCommentLiked ? 'fill-current' : ''}`}
               />
               <span className="text-sm font-medium">{comment.likes}</span>
             </button>
 
-            {isTopLevel && (
+            {canReply && (
               <button
                 onClick={() =>
-                  setReplyingTo(replyingTo === comment.id ? null : comment.id)
+                  setReplyingTo(
+                    replyingTo === comment.idComment ? null : comment.idComment
+                  )
                 }
                 className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors duration-200"
               >
@@ -132,20 +135,19 @@ const Comments: React.FC<CommentsProps> = ({
               </button>
             )}
 
-            {/* {hasReplies && isTopLevel && (
+            {hasReplies && isTopLevel && (
               <button
-                onClick={() => toggleReplies(comment.id)}
+                onClick={() => toggleReplies(comment.idComment)}
                 className="text-sm text-primary hover:text-primary-dark font-medium transition-colors duration-200"
               >
                 {showReplies
                   ? 'Ocultar respostas'
-                  : `Ver ${comment.replies!.length} resposta${comment.replies!.length > 1 ? 's' : ''}`}
+                  : `Ver ${comment.replies.length} resposta${comment.replies.length > 1 ? 's' : ''}`}
               </button>
-            )} */}
+            )}
           </div>
 
-          {/* Reply Form */}
-          {replyingTo === comment.id && (
+          {replyingTo === comment.idComment && (
             <form onSubmit={handleSubmit} className="mt-4 flex space-x-3">
               <input
                 type="text"
@@ -154,26 +156,22 @@ const Comments: React.FC<CommentsProps> = ({
                 placeholder="Escreva sua resposta..."
                 className="flex-1 p-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground"
               />
-              <Button
-                type="submit"
-                variant="primary"
-                size="small"
-                icon={Send}
-                disabled={!newComment.trim()}
-              >
+              <Button type="submit" variant="primary" size="small" icon={Send}>
                 Enviar
               </Button>
             </form>
           )}
-
-          {/* Replies */}
-          {/* {showReplies && hasReplies && (
+          {showReplies && hasReplies && (
             <div className="mt-4 pl-6 border-l-2 border-border/30">
-              {comment.replies!.map((reply) => (
-                <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
+              {comment.replies.map((reply) => (
+                <CommentItem
+                  key={reply.idComment}
+                  comment={reply}
+                  depth={depth + 1}
+                />
               ))}
             </div>
-          )} */}
+          )}
         </div>
       </div>
     );
@@ -181,7 +179,6 @@ const Comments: React.FC<CommentsProps> = ({
 
   return (
     <div className="bg-card border border-border rounded-2xl p-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-foreground">
           Comentários ({comments.length})
@@ -192,36 +189,36 @@ const Comments: React.FC<CommentsProps> = ({
         </div>
       </div>
 
-      {/* Add Comment Form */}
-      <form onSubmit={handleSubmit} className="mb-8">
-        <div className="flex space-x-4">
-          <div className="flex-1">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Compartilhe sua experiência com esta receita..."
-              rows={3}
-              className="w-full p-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-none transition-colors duration-200"
-            />
+      {currentUserId && (
+        <form onSubmit={handleSubmit} className="mb-8">
+          <div className="flex space-x-4">
+            <div className="flex-1">
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Compartilhe sua experiência com esta receita..."
+                rows={3}
+                className="w-full p-4 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground placeholder-muted-foreground resize-none transition-colors duration-200"
+              />
+            </div>
+            <Button
+              type="submit"
+              variant="primary"
+              size="large"
+              icon={Send}
+              disabled={!newComment.trim()}
+              className="self-end"
+            >
+              Comentar
+            </Button>
           </div>
-          <Button
-            type="submit"
-            variant="primary"
-            size="large"
-            icon={Send}
-            disabled={!newComment.trim()}
-            className="self-end"
-          >
-            Comentar
-          </Button>
-        </div>
-      </form>
+        </form>
+      )}
 
-      {/* Comments List */}
       <div className="space-y-0">
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} />
+            <CommentItem key={comment.idComment} comment={comment} />
           ))
         ) : (
           <div className="text-center py-12">
