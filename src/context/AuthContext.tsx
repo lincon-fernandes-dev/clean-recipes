@@ -6,11 +6,11 @@ import { container, Registry } from '@/@core/infra/container-registry';
 import { ILoginResult } from '@/Domain/Interfaces/ILoginResult';
 import { IUser } from '@/Domain/Interfaces/IUser';
 import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
 } from 'react';
 
 interface AuthContextType {
@@ -29,7 +29,7 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const SESSION_STORAGE_KEY = 'recipe_app_session';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({

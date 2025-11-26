@@ -13,6 +13,7 @@ interface RecipeFormProps {
   onSubmit: (recipeData: CreateRecipeData) => void;
   onCancel: () => void;
   isLoading?: boolean;
+  uploadImage?: (file: File) => Promise<string>;
 }
 
 export interface CreateRecipeData {
@@ -48,6 +49,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
   onSubmit,
   onCancel,
   isLoading = false,
+  uploadImage: uploadImageProp = uploadImage,
 }) => {
   const [formData, setFormData] = useState<CreateRecipeData>({
     title: '',
@@ -172,7 +174,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({
     setIsUploading(true);
     try {
       console.log('🔄 Iniciando upload da imagem...');
-      const imageUrl = await uploadImage(selectedImageFile);
+      const imageUrl = await uploadImageProp(selectedImageFile);
       return imageUrl;
     } catch (error) {
       console.error('❌ Erro no upload:', error);

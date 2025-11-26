@@ -193,12 +193,12 @@ export class Recipe implements IRecipe {
     this._updatedAt = new Date();
   }
 
-  hasVoted(userId: string): boolean {
+  isLiked(userId: number): boolean {
     console.log(userId);
     return true;
   }
 
-  addTag(tag: string): void {
+  AddTag(tag: string): void {
     if (!tag.trim()) {
       throw new Error('Tag cannot be empty');
     }
@@ -213,7 +213,7 @@ export class Recipe implements IRecipe {
     }
   }
 
-  removeTag(tag: string): void {
+  RemoveTag(tag: string): void {
     const tagIndex = this._tags!.indexOf(tag);
     if (tagIndex > -1) {
       this._tags!.splice(tagIndex, 1);

@@ -30,6 +30,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose }) => {
       size="sm"
       showCloseButton={true}
       closeOnBackdropClick={true}
+      title="Login"
     >
       {registerDialog ? (
         <UserRegisterForm onRegisterSuccess={handleRegisterSuccess} />

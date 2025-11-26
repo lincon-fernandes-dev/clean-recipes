@@ -4,7 +4,7 @@ import { Comment } from '@/@core/domain/entities/Comment';
 import { Heart, MessageCircle, MoreVertical, Reply, Send } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import Button from '../templates/base/Button/Button';
+import Button from '../../../templates/base/Button/Button';
 
 interface CommentsProps {
   comments: Comment[];

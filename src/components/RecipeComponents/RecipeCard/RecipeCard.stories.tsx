@@ -1,17 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import RecipeFeed from './RecipeFeed';
+
+import RecipeCard from './RecipeCard';
 
 const meta = {
-  title: 'Components/RecipeComponents/RecipeFeed',
-  component: RecipeFeed,
+  title: 'Components/RecipeComponents/RecipeCard',
+  component: RecipeCard,
   parameters: {
-    layout: 'fullscreen',
+    layout: 'centered',
   },
   tags: ['autodocs'],
   args: {
-    onRecipeAction: () => {},
+    onVote: () => {},
+    onComment: () => {},
+    onEdit: () => {},
   },
-} satisfies Meta<typeof RecipeFeed>;
+} satisfies Meta<typeof RecipeCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -45,17 +48,16 @@ const mockRecipe = {
 
 export const Default: Story = {
   args: {
-    recipes: [
-      mockRecipe,
-      { ...mockRecipe, idRecipe: '2', title: 'Torta de Limão', difficulty: 'Médio' },
-      { ...mockRecipe, idRecipe: '3', title: 'Pudim', difficulty: 'Fácil' },
-      { ...mockRecipe, idRecipe: '4', title: 'Feijoada', difficulty: 'Difícil', tags: ['Salgado', 'Brasileira'] },
-    ],
+    recipe: mockRecipe,
   },
 };
 
-export const Empty: Story = {
+export const Difficult: Story = {
   args: {
-    recipes: [],
+    recipe: {
+      ...mockRecipe,
+      difficulty: 'Difícil',
+      votes: 120,
+    },
   },
 };

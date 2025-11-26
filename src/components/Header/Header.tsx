@@ -100,7 +100,7 @@ const Header: React.FC = () => {
             onClick={handleCreateRecipe}
             className="shadow-lg hover:shadow-xl transition-all duration-200"
           >
-            Nova Receita
+            <p className='text-card'>Nova Receita</p>
           </Button>
 
           <Button

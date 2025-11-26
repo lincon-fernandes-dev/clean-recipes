@@ -1,8 +1,13 @@
 'use client';
 
-import Comments from '@/components/Comments/Comments';
+import Comments from '@/components/RecipeComponents/RecipeDetailsPage/Comments/Comments';
+import RecipeIngredientsComponent from '@/components/RecipeComponents/RecipeDetailsPage/Ingredients/RecipeIngredients';
+import RecipeInstructionsComponent from '@/components/RecipeComponents/RecipeDetailsPage/Instructions/RecipeInstructionsComponent';
+import RecipeDetailNutritionInfoComponent from '@/components/RecipeComponents/RecipeDetailsPage/NutritionInfo/RecipeDetailNutritionInfo';
+import Button from '@/components/templates/base/Button/Button';
 import { ErrorState } from '@/components/templates/base/ErrorState/ErrorState';
 import Loading from '@/components/templates/base/Loading/Loading';
+import { useAuth } from '@/context/AuthContext';
 import { useRecipes } from '@/presentation/hooks/useRecipes';
 import {
   ArrowLeft,
@@ -23,9 +28,8 @@ const RecipeDetailPage: React.FC = () => {
   const router = useRouter();
   const recipeId = params.id as string;
   const [isSaved, setIsSaved] = useState(false);
-  const [hasVoted, setHasVoted] = useState(false);
   const [votes, setVotes] = useState(0);
-
+  const { user } = useAuth();
   const { useFindRecipe } = useRecipes();
   const { data: recipe, isLoading, error } = useFindRecipe(recipeId);
 
@@ -37,15 +41,7 @@ const RecipeDetailPage: React.FC = () => {
     return <ErrorState title="Erro ao carregar receitas" error={error} />;
   }
 
-  const handleVote = () => {
-    if (hasVoted) {
-      setVotes(votes - 1);
-      setHasVoted(false);
-    } else {
-      setVotes(votes + 1);
-      setHasVoted(true);
-    }
-  };
+  const handleVote = () => {};
 
   const handleSave = () => {
     setIsSaved(!isSaved);
@@ -127,19 +123,21 @@ const RecipeDetailPage: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center space-x-6 pt-4 border-t border-border">
-              <button
-                onClick={handleVote}
-                className={`flex items-center space-x-2 transition-colors duration-200 ${
-                  hasVoted
-                    ? 'text-red-500'
-                    : 'text-muted-foreground hover:text-red-500'
-                }`}
-              >
-                <Heart
-                  className={`w-5 h-5 ${hasVoted ? 'fill-current' : ''}`}
-                />
-                <span className="font-medium">{votes}</span>
-              </button>
+              {user && (
+                <Button
+                  onClick={handleVote}
+                  className={`flex items-center space-x-2 transition-colors duration-200 ${
+                    recipe!.isLiked(user.id!)
+                      ? 'text-red-500'
+                      : 'text-muted-foreground hover:text-red-500'
+                  }`}
+                >
+                  <Heart
+                    className={`w-5 h-5 ${recipe!.isLiked(user.id!) ? 'fill-current' : ''}`}
+                  />
+                  <span className="font-medium">{votes}</span>
+                </Button>
+              )}
 
               <button className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors duration-200">
                 <MessageCircle className="w-5 h-5" />
@@ -147,10 +145,18 @@ const RecipeDetailPage: React.FC = () => {
               </button>
               {recipe!.author && (
                 <div className="flex items-center space-x-2 ml-auto">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                    <span className="text-primary font-medium text-sm">
-                      {recipe!.author.name.charAt(0)}
-                    </span>
+                  <div className="relative overflow-hidden w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                    {recipe?.author.avatar ? (
+                      <Image
+                        src={recipe.author.avatar!}
+                        alt={recipe.author.name}
+                        fill
+                      />
+                    ) : (
+                      <span className="text-primary font-medium text-sm">
+                        {recipe!.author.name.charAt(0)}
+                      </span>
+                    )}
                   </div>
                   <span className="text-sm text-muted-foreground">
                     Por {recipe!.author.name}
@@ -159,110 +165,15 @@ const RecipeDetailPage: React.FC = () => {
               )}
             </div>
             {recipe!.nutritionInfo && (
-              <div className="bg-card border border-border rounded-xl p-4">
-                <h3 className="font-semibold text-foreground mb-3">
-                  Informação Nutricional (por porção)
-                </h3>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Calorias</span>
-                    <p className="font-medium text-foreground">
-                      {recipe!.nutritionInfo.calories} kcal
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Proteínas</span>
-                    <p className="font-medium text-foreground">
-                      {recipe!.nutritionInfo.proteins}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Carboidratos</span>
-                    <p className="font-medium text-foreground">
-                      {recipe!.nutritionInfo.carbs}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Gorduras</span>
-                    <p className="font-medium text-foreground">
-                      {recipe!.nutritionInfo.fat}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <RecipeDetailNutritionInfoComponent
+                nutritionInfo={recipe?.nutritionInfo!}
+              />
             )}
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <div className="bg-card border border-border rounded-2xl p-6">
-              <h2 className="text-2xl font-bold text-foreground mb-6">
-                Ingredientes
-              </h2>
-              <ul className="space-y-3">
-                {recipe!.ingredients?.map((ingredient, index) => (
-                  <li key={index} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0"></div>
-                    <span className="text-foreground leading-relaxed">
-                      {ingredient.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="space-y-6">
-            <div className="bg-card border border-border rounded-2xl p-6">
-              <h2 className="text-2xl font-bold text-foreground mb-6">
-                Modo de Preparo
-              </h2>
-              <ol className="space-y-4">
-                {recipe!.instructions?.map((instruction, index) => (
-                  <li key={index} className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center shrink-0 font-semibold text-sm">
-                      {index + 1}
-                    </div>
-                    <p className="text-foreground leading-relaxed pt-1">
-                      {instruction.content}
-                    </p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-          {recipe!.nutritionInfo && (
-            <div className="bg-card border border-border rounded-xl p-4">
-              <h3 className="font-semibold text-foreground mb-3">
-                Informação Nutricional (por porção)
-              </h3>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Calorias</span>
-                  <p className="font-medium text-foreground">
-                    {recipe!.nutritionInfo.calories} kcal
-                  </p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Proteínas</span>
-                  <p className="font-medium text-foreground">
-                    {recipe!.nutritionInfo.proteins}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Carboidratos</span>
-                  <p className="font-medium text-foreground">
-                    {recipe!.nutritionInfo.carbs}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Gorduras</span>
-                  <p className="font-medium text-foreground">
-                    {recipe!.nutritionInfo.fat}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+          <RecipeIngredientsComponent recipe={recipe!} />
+          <RecipeInstructionsComponent recipe={recipe!} />
           <Comments
             comments={recipe?.comments || []}
             onAddComment={() => console.log('add comment')}

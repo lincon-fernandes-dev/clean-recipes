@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useRef, useState } from 'react';
+import Button from '../templates/base/Button/Button';
 
 interface ImagePickerProps {
   label: string;
@@ -85,13 +86,14 @@ export default function ImagePicker({
             className="hidden"
           />
 
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="small"
             onClick={handlePickClick}
             className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
           >
-            Escolher Imagem
-          </button>
+            <p className="text-card text-lg">Escolher Imagem</p>
+          </Button>
 
           <p className="text-sm text-muted-foreground">
             PNG, JPG, WebP até 10MB

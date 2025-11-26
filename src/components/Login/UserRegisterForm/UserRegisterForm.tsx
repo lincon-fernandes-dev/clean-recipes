@@ -77,7 +77,7 @@ const UserRegisterForm: React.FC<IUserRegisterFormProps> = ({
       {/* Header do Formulário */}
       <div className="text-center ">
         <div className="flex justify-center mb-3">
-          <div className="hidden md:block w-12 h-12 bg-linear-to-br from-primary to-accent rounded-xl items-center justify-center">
+          <div className="hidden md:flex w-12 h-12 bg-linear-to-br from-primary to-accent rounded-xl items-center justify-center">
             <ChefHat className="w-6 h-6 text-white" />
           </div>
         </div>

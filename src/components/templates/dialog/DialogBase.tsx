@@ -8,7 +8,7 @@ import Button from '../base/Button/Button';
 export interface DialogProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
+  title: string;
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showCloseButton?: boolean;
@@ -95,6 +95,7 @@ const Dialog: React.FC<DialogProps> = ({
                 onClick={onClose}
                 className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors duration-200"
                 aria-label="Fechar"
+                name="close"
               >
                 <X className="w-5 h-5" />
               </Button>

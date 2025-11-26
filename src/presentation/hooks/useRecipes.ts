@@ -69,7 +69,6 @@ export const useRecipes = () => {
     });
   };
 
-  // Mutation para deletar uma receita
   const useDeleteRecipe = () => {
     return useMutation({
       mutationFn: (id: string) => deleteRecipeUseCase.execute(id),
